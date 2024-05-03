@@ -16,7 +16,7 @@
     "gh-pages-create": "git rev-parse --verify --quiet gh-pages || (git branch gh-pages && git push --set-upstream origin gh-pages)",
     "gh-pages-publish": "gh-pages --dist=dist --message=\"build: deploy dist for github pages\""
   },
-  "author": "Deyan 'stambolievv' Stamboliev",
+  "author": "Eleonora Atanasova",
   "license": "Apache-2.0",
   "keywords": [
     "cars",
@@ -27,10 +27,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stambolievv/Car-Service.git"
+    "url": "git+https://github.com/eleonoraat01/Car-Service.git"
   },
   "bugs": {
-    "url": "https://github.com/stambolievv/Car-Service/issues"
+    "url": "https://github.com/eleonoraat01/Car-Service/issues"
   },
   "dependencies": {
     "lit": "^2.6.1",

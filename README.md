@@ -90,7 +90,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Clone Project
 ```bash
-git clone git@github.com:stambolievv/Car-Service.git
+git clone git@github.com:eleonoraat01/Car-Service.git
 ```
 
 ### Installing
