@@ -78,7 +78,8 @@
   padding-inline-start: min(1vw, 10px);
 }
 
-#catalog-page form table {
+#catalog-page form table,
+#admin-page table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
@@ -88,34 +89,45 @@
   box-shadow: var(--default-box-shadow);
 }
 
-#catalog-page form table thead {
+#catalog-page form table thead,
+#admin-page table thead {
   text-align: center;
   background-color: var(--table-row-background);
   color: var(--color-primary);
 }
 
-#catalog-page form table tbody {
+#catalog-page form table tbody,
+#admin-page table tbody {
   text-align: left;
   color: var(--color-accent);
   background-color: var(--background-color-primary);
 }
 
+#admin-page table tbody {
+  text-align: center;
+}
+
 #catalog-page form table th,
-#catalog-page form table td {
+#catalog-page form table td,
+#admin-page table th,
+#admin-page table td {
   padding: 0.5vh;
   border-right: 1px solid var(--table-cell-border);
   border-bottom: 1px solid var(--table-cell-border);
 }
 
-#catalog-page form table tbody tr:nth-of-type(even) {
+#catalog-page form table tbody tr:nth-of-type(even),
+#admin-page table tbody tr:nth-of-type(even) {
   background-color: var(--background-color-secondary);
 }
 
-#catalog-page form table tbody tr:last-child {
+#catalog-page form table tbody tr:last-child,
+#admin-page table tbody tr:last-child {
   border-bottom: 3px solid var(--color-accent);
 }
 
-#catalog-page form .pagination {
+#catalog-page form .pagination,
+#admin-page .pagination {
   display: flex;
   align-self: stretch;
   justify-content: center;
@@ -124,7 +136,8 @@
   text-align: center;
 }
 
-#catalog-page form .pagination a {
+#catalog-page form .pagination a,
+#admin-page .pagination a {
   position: relative;
   padding-inline: 1vmax;
   margin-inline: 0.5vmax;
@@ -134,15 +147,18 @@
   font-size: 1.4em;
 }
 
-#catalog-page form .pagination a:first-child {
+#catalog-page form .pagination a:first-child,
+#admin-page .pagination a:first-child {
   margin-inline-end: auto;
 }
 
-#catalog-page form .pagination a:last-child {
+#catalog-page form .pagination a:last-child,
+#admin-page .pagination a:last-child {
   margin-inline-start: auto;
 }
 
-#catalog-page form .pagination a>i {
+#catalog-page form .pagination a>i,
+#admin-page .pagination a>i {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -151,13 +167,62 @@
 
 #catalog-page form .pagination a:hover,
 #catalog-page form .pagination a:active,
-#catalog-page form .pagination a.active {
+#catalog-page form .pagination a.active,
+#admin-page .pagination a:hover,
+#admin-page .pagination a:active,
+#admin-page .pagination a.active {
   background-color: var(--color-accent);
   color: var(--color-primary);
 }
 
-#catalog-page form .pagination a.not-selectable {
+#catalog-page form .pagination a.not-selectable,
+#admin-page .pagination a.not-selectable {
   pointer-events: none;
+}
+
+#admin-page {
+  padding-inline: max(1vmax, 5px);
+  padding-block-start: max(1vmax, 5px);
+  padding-block-end: 1vmax;
+  background-color: var(--color-primary);
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+  box-shadow: var(--default-box-shadow);
+}
+
+#admin-page .title {
+  display: block;
+  margin-bottom: min(5vmax, 10px);
+  padding-inline-start: min(5vmax, 10px);
+  font-size: 1.35em;
+  text-align: left;
+  color: var(--color-primary);
+  background-color: var(--color-accent);
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+}
+
+#admin-page .container {
+  --min: 10ch;
+  --gap: 1rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  padding-bottom: var(--gap);
+}
+
+#admin-page .container>* {
+  flex: 1 1 var(--min);
+}
+
+#admin-page .container .chart {
+  padding-inline: max(1vmax, 5px);
+  padding-block-start: max(1vmax, 5px);
+  padding-block-end: 1vmax;
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+  box-shadow: var(--default-box-shadow);
 }
 
 @media (max-width: 600px) {
@@ -177,18 +242,21 @@
     width: 100%;
   }
 
-  #catalog-page form table tbody {
+  #catalog-page form table tbody,
+  #admin-page table tbody {
     display: flex;
     flex-direction: column;
     gap: 2vw;
     background-color: var(--background-color-secondary);
   }
 
-  #catalog-page form table th {
+  #catalog-page form table th,
+  #admin-page table th {
     display: none;
   }
 
-  #catalog-page form table td {
+  #catalog-page form table td,
+  #admin-page table td {
     display: grid;
     grid-template-columns: 30vw auto;
     align-items: center;
@@ -198,7 +266,8 @@
     background-color: var(--background-color-primary);
   }
 
-  #catalog-page form table td::before {
+  #catalog-page form table td::before,
+  #admin-page table td::before {
     content: attr(data-cell-content) ": ";
     height: 100%;
     padding-block: max(0.5vh, 5px);
@@ -207,24 +276,29 @@
     color: var(--color-primary);
   }
 
-  #catalog-page form table td .buttons>* {
+  #catalog-page form table td .buttons>*,
+  #admin-page table td .buttons>* {
     width: 100%;
     margin-block: max(0.5vh, 5px);
   }
 
-  #catalog-page form table td:nth-of-type(even) {
+  #catalog-page form table td:nth-of-type(even),
+  #admin-page table td:nth-of-type(even) {
     background-color: var(--background-color-secondary);
   }
 
-  #catalog-page form table tbody tr:not(:first-child) td:first-child {
+  #catalog-page form table tbody tr:not(:first-child) td:first-child,
+  #admin-page table tbody tr:not(:first-child) td:first-child {
     border-top: 1px solid var(--table-cell-border);
   }
 
-  #catalog-page form table tbody tr:last-child td:last-child {
+  #catalog-page form table tbody tr:last-child td:last-child,
+  #admin-page table tbody tr:last-child td:last-child {
     border-bottom: 0;
   }
 
-  #catalog-page form .pagination a {
+  #catalog-page form .pagination a,
+  #admin-page .pagination a {
     padding-inline: 2vw;
     margin-inline: 2vw;
   }

@@ -9,7 +9,7 @@ export const USER_ENDPOINTS = {
    * @description Endpoint to perform a user login operation.
    * @type {string}
    */
-  LOGIN: '/login',
+  LOGIN: '/functions/loginWithRoles',
 
   /**
    * @description Endpoint to perform a user registration operation.
@@ -22,6 +22,12 @@ export const USER_ENDPOINTS = {
    * @type {string}
    */
   LOGOUT: '/logout',
+
+  /**
+   * @description Endpoint to retrieve all users with their roles.
+   * @type {string}
+   */
+  ALL_USERS: '/functions/getAllUsersWithRoles',
 };
 
 /**
@@ -66,7 +72,13 @@ export const REPAIR_ENDPOINTS = {
    * @param {string} car - The car parameter for filtering repairs.
    * @returns {string} The formatted endpoint URL.
    */
-  ALL_REPAIRS: (car) => `/classes/Repair?${makeQueryParam({ order: '-date', where: car })}`,
+  ALL_REPAIRS_BY_CAR: (car) => `/classes/Repair?${makeQueryParam({ order: '-date', where: car })}`,
+
+  /**
+   * @description Endpoint to retrieve all repairs with optional query parameters.
+   * @returns {string} The formatted endpoint URL.
+   */
+  ALL_REPAIRS: () => `/classes/Repair?${makeQueryParam({ order: '-date', include: 'owner' })}`,
 
   /**
    * @description Endpoint to retrieve a repair by its ID.

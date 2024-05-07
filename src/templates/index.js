@@ -1,5 +1,6 @@
 export { default as login } from './user/login';
 export { default as register } from './user/register';
+export { default as adminDashboard } from './admin/dashboard';
 export { default as carCatalog } from './car/catalog';
 export { default as carCreate } from './car/create';
 export { default as carEdit } from './car/edit';

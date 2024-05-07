@@ -41,14 +41,17 @@
   <body>
     <header id="site-header">
       <nav role="navigation">
+        <ul role="menubar" class="admin-navigation" hidden>
+          <li role="menuitem"><a href="<%- APP_HOST_URL %>/admin">Табло</a></li>
+        </ul>
         <ul role="menubar" class="user-navigation" hidden>
           <li role="menuitem"><a href="<%- APP_HOST_URL %>/cars/create">Добави автомобил</a></li>
           <li role="menuitem"><a href="<%- APP_HOST_URL %>/cars">Всички автомобили</a></li>
         </ul>
-        <ul role="menubar" class="user-navigation" hidden>
+        <ul role="menubar" class="user-navigation admin-navigation" hidden>
           <li role="menuitem"><a href="#" id="logout-button">Излез</a></li>
         </ul>
-        <ul role="menubar" class="guest-navigation">
+        <ul role="menubar" class="guest-navigation" hidden>
           <li role="menuitem"><a href="<%- APP_HOST_URL %>/user/login">Вход</a></li>
           <li role="menuitem"><a href="<%- APP_HOST_URL %>/user/register">Регистрация</a></li>
         </ul>

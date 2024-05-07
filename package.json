@@ -33,6 +33,7 @@
     "url": "https://github.com/eleonoraat01/Car-Service/issues"
   },
   "dependencies": {
+    "chart.js": "^4.4.2",
     "lit": "^2.6.1",
     "page": "^1.11.6"
   },

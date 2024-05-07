@@ -2,6 +2,7 @@ import page from 'page';
 import { login } from '../../api';
 import { login as template } from '../../templates';
 import { formDataHandler, notice } from '../../utilities';
+import config from '../../config';
 
 /**
  * @description Renders the `login` page and handles form submission for logging the user.
@@ -24,8 +25,13 @@ async function onSubmit(event) {
   try {
     setDisabled(true);
     notice.showLoading({ type: 'cube-zoom' });
-    await login(data);
-    page.redirect('/cars');
+
+    const user = await login(data);
+    const route = user.isSuperUser ? '/admin' : '/cars';
+
+    if (user.isSuperUser) config.cacheDisabled = true;
+
+    page.redirect(route);
   } catch (error) {
     const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';
     notice.showToast({ text: errorMessages, type: 'error' });

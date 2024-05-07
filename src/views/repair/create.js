@@ -8,18 +8,19 @@ import { formDataHandler, formatDateToISO, notice } from '../../utilities';
  * @param {Context} ctx - The context object.
  */
 export function createRepairPage(ctx) {
-  const { carId } = ctx.params;
+  const { carId, userId } = ctx.params;
   const { prev = `${page.base()}/cars/${carId}/repairs` } = ctx.state;
 
-  ctx.render(template({ prev, onSubmit: (event) => onSubmit(event, carId) }));
+  ctx.render(template({ prev, onSubmit: (event) => onSubmit(event, carId, userId) }));
 }
 
 /**
  * @description Handles form submission for creating a new repair record.
  * @param {SubmitEvent} event - The form submission event.
  * @param {string} carId - The id of the car to add the repair to.
+ * @param {string} [userId] - The id of the user to add the repair to.
  */
-async function onSubmit(event, carId) {
+async function onSubmit(event, carId, userId) {
   event.preventDefault();
 
   const form = /**@type {HTMLFormElement}*/(event.target);
@@ -29,7 +30,7 @@ async function onSubmit(event, carId) {
   try {
     setDisabled(true);
     notice.showLoading();
-    await createRepair(carId, data);
+    await createRepair(carId, data, userId);
     notice.showToast({ text: 'Успешно добавихте ремонт', type: 'success' });
   } catch (error) {
     const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';

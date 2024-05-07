@@ -10,14 +10,15 @@ import { formDataHandler, notice } from '../../utilities';
 export function createCarPage(ctx) {
   const { prev = `${page.base()}/cars` } = ctx.state;
 
-  ctx.render(template({ prev, onSubmit }));
+  ctx.render(template({ prev, onSubmit: (event) => onSubmit(event, ctx.params.userId) }));
 }
 
 /**
  * @description Handles form submission for creating a new car record.
  * @param {SubmitEvent} event - The form submission event.
+ * @param {string} [userId] - The user ID to associate with the car.
  */
-async function onSubmit(event) {
+async function onSubmit(event, userId) {
   event.preventDefault();
 
   const form = /**@type {HTMLFormElement}*/(event.target);
@@ -26,7 +27,7 @@ async function onSubmit(event) {
   try {
     setDisabled(true);
     notice.showLoading();
-    await createCar(data);
+    await createCar(data, userId);
     notice.showToast({ text: `Успешно създадохте автомобил на ${data.customerName} - "${data.registration}"`, type: 'success' });
   } catch (error) {
     const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';

@@ -12,7 +12,7 @@ export function carsCatalogPage(ctx) {
   const { page = '1', filter = '', query = '', } = /**@type {{page: string, filter: string, query: string}}*/(getQueryParam(ctx.querystring));
 
   ctx.render(until((async () => {
-    const data = await getPageData(Number(page) || 1, filter, query);
+    const data = await getPageData(Number(page) || 1, filter, query, ctx.params.userId);
     if (!data) return;
 
     return template({ ...data, onSearch, onDelete });
@@ -24,11 +24,12 @@ export function carsCatalogPage(ctx) {
  * @param {number} pageNumber - The page number to retrieve data for.
  * @param {string} searchCategory - The search category string.
  * @param {string} searchQuery - The search query string.
+ * @param {string} [userId] - The user ID to filter cars by.
  * @returns {Promise<{cars: Array<Car>, carsCount: number, pageNumber: number, searchCategory: string, searchQuery: string} | undefined>} A promise that resolves with an object containing the data.
  */
-async function getPageData(pageNumber, searchCategory, searchQuery) {
+async function getPageData(pageNumber, searchCategory, searchQuery, userId) {
   try {
-    const { results: cars, count: carsCount } = await getAllCars(pageNumber, searchCategory, searchQuery);
+    const { results: cars, count: carsCount } = await getAllCars(pageNumber, searchCategory, searchQuery, userId);
 
     return { cars, carsCount, pageNumber, searchCategory, searchQuery };
   } catch (error) {

@@ -36,12 +36,20 @@
  * @property {string} username - The username of the user.
  * @property {string} id - The id of the user.
  * @property {string} token - The token of the user.
+ * @property {boolean} [isSuperUser] - Indicates whether the user is a super user (administrator).
+ */
+/**
+ * @typedef {object} UserRegisterData Represents an object with user's data.
+ * @property {string} objectId - The unique identifier of the object.
+ * @property {string} sessionToken - The session token associated with the object.
+ * @property {string} createdAt - The server creation timestamp of the object (ISO 8601 format).
  */
 /**
  * @typedef {object} UserAuthData Represents an object with user's data.
  * @property {string} objectId - The unique identifier of the object.
  * @property {string} username - The username associated with the object.
  * @property {string} sessionToken - The session token associated with the object.
+ * @property {Array<string>} roles - The roles associated with the user.
  * @property {string} createdAt - The server creation timestamp of the object (ISO 8601 format).
  * @property {string} updatedAt - The server last update timestamp of the object (ISO 8601 format).
  */

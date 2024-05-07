@@ -1,3 +1,4 @@
+export { adminPage } from './admin/dashboard';
 export { loginPage } from './user/login';
 export { registerPage } from './user/register';
 export { onLogout } from './user/logout';

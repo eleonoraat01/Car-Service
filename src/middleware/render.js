@@ -1,5 +1,5 @@
 import { render } from 'lit';
-import { hasUserData } from '../api';
+import { getUserData, hasUserData } from '../api';
 import { updateNavigation } from '../utilities';
 
 const root = document.getElementById('site-content') || document.body;
@@ -14,12 +14,11 @@ const monitoredPaths = ['/cars', '/repairs'];
  * @param {Function} next - The next middleware in the chain.
  */
 export function decorateContext(ctx, next) {
-  updateNavigation();
+  const context = Object.assign(ctx, { root, render: renderer });
 
-  Object.assign(ctx, { root, render: renderer });
-
-  setPreviousPath(ctx);
-  enhanceViewport(ctx);
+  saveContextVariables(context);
+  enhanceViewport(context);
+  updateNavigation(context);
 
   transitionToNextView(() => {
     const hasUser = hasUserData();
@@ -48,13 +47,19 @@ function renderer(content, options = {}) {
 }
 
 /**
- * @description Updates the previous path in the context state.
- * @param {TypedPageJSContext} ctx - The context object.
+ * @description Updates the previous path in the context state and the user id if the admin si browsing as a user.
+ * @param {Context} ctx - The context object.
  */
-function setPreviousPath(ctx) {
+function saveContextVariables(ctx) {
   const { origin, pathname, search } = window.location;
   const currentPath = origin + ctx.pathname;
   const isMonitored = monitoredPaths.some(path => pathname.endsWith(path));
+
+  const user = getUserData();
+  if (user && user.isSuperUser) {
+    const match = ctx.pathname.match(/\/[^/]+\/([^/]+)/);
+    if (match) ctx.params.userId = match[1];
+  }
 
   if (isMonitored && currentPath !== origin + pathname) {
     ctx.state.prev = pathname + search;
@@ -63,7 +68,7 @@ function setPreviousPath(ctx) {
 
 /**
  * @description Enhances the viewport meta tag based on the current path.
- * @param {TypedPageJSContext} ctx - The context object.
+ * @param {Context} ctx - The context object.
  */
 function enhanceViewport(ctx) {
   const { path } = ctx;

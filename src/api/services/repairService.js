@@ -20,11 +20,12 @@ const dateTimeSorter = (a, b) => {
  * @description Creates a new repair for a specific car in the database with the provided data.
  * @param {string} carId - The unique identifier of the car for which the repair is created.
  * @param {RepairData} data - The data of the new repair.
+ * @param {string} [userId] - The user ID to associate with the car.
  * @returns {Promise<Repair>} A promise that resolves with the created repair.
  */
-export async function createRepair(carId, data) {
-  const { id: userId } = /**@type {UserStoredData}*/(getUserData());
-  const ownerPointer = { 'owner': Object.freeze({ __type: 'Pointer', className: '_User', objectId: userId }) };
+export async function createRepair(carId, data, userId) {
+  const { id: objectId } = /**@type {UserStoredData}*/(userId ? { id: userId } : getUserData());
+  const ownerPointer = { 'owner': Object.freeze({ __type: 'Pointer', className: '_User', objectId }) };
   const carPointer = { 'car': Object.freeze({ __type: 'Pointer', className: 'Car', objectId: carId }) };
   const body = Object.assign({}, data, ownerPointer, carPointer);
 
@@ -42,12 +43,21 @@ export async function createRepair(carId, data) {
 }
 
 /**
+ * @description Retrieves all repairs from the database.
+ * @returns {Promise<Array<Repair & { owner: { username:string } }>>} A promise that resolves with an array of repairs.
+ */
+export async function getRepairs() {
+  const response =/**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS()));
+  return /**@type {Array<Repair & { owner: { username:string } }>}*/(response.results);
+}
+
+/**
  * @description Retrieves all repairs for a specific car from the database, with optional pagination.
  * @param {string} carId - The unique identifier of the car for which repairs are retrieved.
  * @param {number} [page] - The page number for pagination.
  * @returns {Promise<{results: Array<Repair>, count: number}>} A promise that resolves with an object containing the results and count.
  */
-export async function getAllRepairs(carId, page) {
+export async function getAllRepairsByCar(carId, page) {
   const queryParams = JSON.stringify({ 'car': { __type: 'Pointer', className: 'Car', objectId: carId } });
 
   const cacheId = `/cars/${carId}/repairs`;
@@ -57,7 +67,7 @@ export async function getAllRepairs(carId, page) {
 
   if (cachedData) results = cachedData;
   else {
-    ({ results } = /**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS(queryParams))));
+    ({ results } = /**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS_BY_CAR(queryParams))));
     await memoization.updateCacheData(cacheId, JSON.parse(JSON.stringify(results)));
   }
 
@@ -143,7 +153,7 @@ export async function deleteRepair(carId, repairId) {
  * @returns {Promise<Array<DeleteRequestResult>>} A promise that resolves with the deletion responses.
  */
 export async function deleteAllRepairs(carId) {
-  const { results } = await getAllRepairs(carId);
+  const { results } = await getAllRepairsByCar(carId);
   const response = results.map(({ objectId }) => api.DEL(REPAIR_ENDPOINTS.REPAIR_BY_ID(objectId)));
 
   const cacheId = `/cars/${carId}/repairs`;

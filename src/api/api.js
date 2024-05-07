@@ -15,7 +15,7 @@ async function request(path, options) {
     if (response.status === 403) await removeUserData();
 
     const error = await response.json();
-    throw new Error(`${error.error} Status: ${response.status}`, { cause: response });
+    throw new Error(`${error.message || error.error} Status: ${response.status}`, { cause: response });
   }
 
   return response.json();

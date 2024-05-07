@@ -23,6 +23,8 @@ export async function onLogout(event) {
   try {
     notice.showLoading({ type: 'cube-zoom' });
     await logout();
+
+    page.base(import.meta.env.VITE_APP_HOST_URL);
     page.redirect('/user/login');
   } catch (error) {
     const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';

@@ -7,11 +7,13 @@ import config from '../../config';
 /**
  * @description Creates a new car in the database with the provided data.
  * @param {CarData} data - The data of the new car.
+ * @param {string} [userId] - The user ID to associate with the car.
  * @returns {Promise<Car>} A promise that resolves with the created car.
  */
-export async function createCar(data) {
-  const { id: userId } = /**@type {UserStoredData}*/(getUserData());
-  const ownerPointer = { 'owner': Object.freeze({ __type: 'Pointer', className: '_User', objectId: userId }) };
+export async function createCar(data, userId) {
+  const { id: objectId } = /**@type {UserStoredData}*/(userId ? { id: userId } : getUserData());
+
+  const ownerPointer = { 'owner': Object.freeze({ __type: 'Pointer', className: '_User', objectId }) };
   const body = Object.assign({}, data, ownerPointer);
 
   const response = await api.POST(CAR_ENDPOINTS.CREATE_CAR, body);
@@ -20,8 +22,9 @@ export async function createCar(data) {
   const cachedData = /**@type {Array<Car>}*/(await memoization.getCacheData(cacheId)) ?? [];
 
   const carData = { ...body, ...response };
-  const updatedCache = [carData, ...cachedData].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  if (userId) return carData;
 
+  const updatedCache = [carData, ...cachedData].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
   await memoization.updateCacheData(cacheId, JSON.parse(JSON.stringify(updatedCache)));
 
   return carData;
@@ -32,10 +35,12 @@ export async function createCar(data) {
  * @param {number} [page] - The page number for pagination.
  * @param {string} [searchCategory] - The category for searching cars.
  * @param {string} [searchQuery] - The query string for searching cars.
+ * @param {string} [userId] - The user ID to filter cars by.
  * @returns {Promise<{results: Array<Car>, count: number}>} A promise that resolves with an object containing the results and count.
  */
-export async function getAllCars(page, searchCategory, searchQuery) {
+export async function getAllCars(page, searchCategory, searchQuery, userId) {
   const queryParams = searchCategory && searchQuery ? JSON.stringify({ [searchCategory]: { $regex: `(?i)${searchQuery}` } }) : null;
+  const userQuery = userId ? JSON.stringify({ owner: { __type: 'Pointer', className: '_User', objectId: userId } }) : null;
 
   const cacheId = '/cars';
   const cachedData = /**@type {Array<Car> | undefined | null}*/(await memoization.getCacheData(cacheId));
@@ -43,10 +48,10 @@ export async function getAllCars(page, searchCategory, searchQuery) {
   let results;
 
   if (!queryParams) {
-    results = cachedData ?? /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS())).results;
+    results = cachedData ?? /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(userQuery ?? ''))).results;
     if (!cachedData) await memoization.updateCacheData(cacheId, results);
   } else {
-    ({ results } = /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(queryParams))));
+    ({ results } = /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(queryParams.concat(userQuery ?? '')))));
   }
 
   if (!page) return { results, count: results.length };

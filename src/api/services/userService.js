@@ -6,15 +6,24 @@ import config from '../../config';
 /**
  * @description Performs a user login operation with the provided user credentials. Upon successful authentication, the user's information is stored in the session storage and the navigation bar is updated.
  * @param {UserLoginCredentials} data - User credentials.
- * @returns {Promise<UserAuthData>} The result from the server.
+ * @returns {Promise<UserAuthData & {isSuperUser: boolean}>} The result from the server.
  */
 export async function login(data) {
-  const result = /**@type {UserAuthData}*/(await api.POST(USER_ENDPOINTS.LOGIN, data));
+  const response = /**@type {unknown}*/(await api.POST(USER_ENDPOINTS.LOGIN, data));
+  const { result } = /**@type {{result: UserAuthData}}*/(response);
 
-  await setUserData({ username: data.username, id: result.objectId, token: result.sessionToken });
+  const isSuperUser = result.roles.includes('Admin');
+
+  await setUserData({
+    username: data.username,
+    id: result.objectId,
+    token: result.sessionToken,
+    isSuperUser
+  });
+
   updateNavigation();
 
-  return result;
+  return { isSuperUser, ...result };
 }
 
 /**
@@ -23,12 +32,17 @@ export async function login(data) {
  * @returns {Promise<UserAuthData>} The result from the server.
  */
 export async function register(data) {
-  const result = /**@type {UserAuthData}*/(await api.POST(USER_ENDPOINTS.REGISTER, data));
+  const result = /**@type {UserRegisterData}*/(await api.POST(USER_ENDPOINTS.REGISTER, data));
 
-  await setUserData({ username: data.username, id: result.objectId, token: result.sessionToken });
+  await setUserData({
+    username: data.username,
+    id: result.objectId,
+    token: result.sessionToken
+  });
+
   updateNavigation();
 
-  return result;
+  return { username: data.username, updatedAt: result.createdAt, roles: [], ...result };
 }
 
 /**
@@ -42,6 +56,26 @@ export async function logout() {
   updateNavigation();
 
   return result;
+}
+
+/**
+ * @description Retrieves all users from the server.
+ * @param {number} [page] - The page number for pagination.
+ * @returns {Promise<{results: Array<UserAuthData>, count: number}>} A promise that resolves to an array of user data.
+ */
+export async function getAllUsers(page) {
+  const response = /**@type {unknown}*/(await api.POST(USER_ENDPOINTS.ALL_USERS, {}));
+  const { result } = /**@type {{result: Array<UserAuthData>}}*/(response);
+
+  const users = result.filter(user => !user.roles.includes('Admin'));
+
+  if (!page) return { results: users, count: users.length };
+
+  const startIdx = (page - 1) * config.usersPerPage;
+  const endIdx = page * config.usersPerPage;
+  const paginatedResults = users.slice(startIdx, endIdx);
+
+  return { results: paginatedResults, count: users.length };
 }
 
 /**

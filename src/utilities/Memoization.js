@@ -33,7 +33,7 @@ class Memoization {
    * @readonly
    */
   get supported() {
-    return !!window.caches;
+    return !!window.caches && !config.cacheDisabled;
   }
 
   /**
