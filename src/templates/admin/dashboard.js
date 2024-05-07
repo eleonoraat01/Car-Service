@@ -217,7 +217,7 @@ const colors = {
 
 const profitChartConfig = /**@type {import('chart.js').ChartOptions<'pie'>}*/({
   responsive: true,
-  aspectRatio: 2 / 1,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: 'top',
@@ -244,6 +244,7 @@ const profitChartConfig = /**@type {import('chart.js').ChartOptions<'pie'>}*/({
 
 const repairsChartConfig = /**@type {import('chart.js').ChartOptions<'bar'>}*/({
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       display: false
