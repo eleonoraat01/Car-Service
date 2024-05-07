@@ -136,6 +136,14 @@
   text-align: center;
 }
 
+#admin-page .pagination {
+  margin-top: 1vmax;
+  background-color: var(--color-primary);
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+  box-shadow: var(--default-box-shadow);
+}
+
 #catalog-page form .pagination a,
 #admin-page .pagination a {
   position: relative;
@@ -192,7 +200,6 @@
 
 #admin-page .title {
   display: block;
-  margin-bottom: min(5vmax, 10px);
   padding-inline-start: min(5vmax, 10px);
   font-size: 1.35em;
   text-align: left;
@@ -200,6 +207,7 @@
   background-color: var(--color-accent);
   border: var(--default-border);
   border-radius: var(--default-border-radius);
+  transform: translateY(-100%);
 }
 
 #admin-page .chart {
