@@ -1,3 +1,4 @@
+import { getUserData } from '../api';
 import config from '../config';
 
 /**
@@ -33,7 +34,8 @@ class Memoization {
    * @readonly
    */
   get supported() {
-    return !!window.caches && !config.cacheDisabled;
+    const user = getUserData();
+    return !!window.caches && !!user && !user.isSuperUser;
   }
 
   /**

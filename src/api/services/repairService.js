@@ -47,7 +47,7 @@ export async function createRepair(carId, data, userId) {
  * @returns {Promise<Array<Repair & { owner: { username:string } }>>} A promise that resolves with an array of repairs.
  */
 export async function getRepairs() {
-  const response =/**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS()));
+  const response =/**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS));
   return /**@type {Array<Repair & { owner: { username:string } }>}*/(response.results);
 }
 

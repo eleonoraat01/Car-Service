@@ -29,8 +29,6 @@ async function onSubmit(event) {
     const user = await login(data);
     const route = user.isSuperUser ? '/admin' : '/cars';
 
-    if (user.isSuperUser) config.cacheDisabled = true;
-
     page.redirect(route);
   } catch (error) {
     const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';
