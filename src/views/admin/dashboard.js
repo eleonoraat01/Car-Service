@@ -70,7 +70,7 @@ async function getAllRepairsData() {
       acc[username] = { profit: 0, count: 0 };
     }
 
-    acc[username].profit += Number(obj.profit);
+    acc[username].profit += parseFloat(obj.profit || '0');
     acc[username].count++;
 
     return acc;

@@ -6,10 +6,11 @@ import config from '../../config';
 /**
  * @typedef {object} RepairCatalogPageProps
  * @property {Array<Repair>} repairs - The array of repairs.
- * @property {number} repairsCount - The total number of repairs.
+ * @property {Array<Repair>} allRepairs - The array of all repairs, not only the paginated ones.
  * @property {Car} car - The car object.
  * @property {number} pageNumber - The current page number.
  * @property {string} prev - The previous page path.
+ * @property {(event: Event, car: Car, repairs: Array<Repair>) => void} onExport - The function to be called when the export button is clicked.
  */
 
 /**
@@ -18,8 +19,8 @@ import config from '../../config';
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
 export default (data) => {
-  const { repairs, repairsCount, car, pageNumber, prev } = data;
-  const totalPages = Math.max(Math.ceil(repairsCount / config.itemsPerPage), 1);
+  const { repairs, allRepairs, car, pageNumber, prev, onExport } = data;
+  const totalPages = Math.max(Math.ceil(allRepairs.length / config.itemsPerPage), 1);
 
   return html`
     <section id="catalog-page">
@@ -30,6 +31,7 @@ export default (data) => {
           <fieldset class="search">
             <div class="buttons">
               <a role="button" data-button-type="success" href="${page.base()}/cars/${car.objectId}/repairs/create">Добави ремонт</a>
+              <button data-button-type="info" @click=${(e) => onExport(e, car, allRepairs)}>Експорт</button>
               <a role="button" href="${prev}">Назад</a>
             </div>
           </fieldset>

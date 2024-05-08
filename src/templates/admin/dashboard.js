@@ -2,7 +2,7 @@ import page from 'page';
 import { html } from 'lit';
 import { Chart, registerables } from 'chart.js';
 import config from '../../config';
-import { makeQueryParam } from '../../utilities';
+import { currencyFormatter, makeQueryParam } from '../../utilities';
 
 Chart.register(...registerables);
 
@@ -233,7 +233,7 @@ const profitChartConfig = /**@type {import('chart.js').ChartOptions<'pie'>}*/({
           const value = context.parsed || 0;
           const total = context.dataset.data.reduce((acc, x) => acc + x, 0);
           const percent = ((value / total) * 100).toFixed(2);
-          const currency = new Intl.NumberFormat('bg-BG', { style: 'currency', currency: 'BGN' }).format(value);
+          const currency = currencyFormatter(value.toString());
 
           return `${label}: ${currency} (${percent}%)`;
         }

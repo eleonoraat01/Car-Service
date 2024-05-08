@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "chart.js": "^4.4.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "lit": "^2.6.1",
     "page": "^1.11.6"
   },

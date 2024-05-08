@@ -55,7 +55,7 @@ export async function getRepairs() {
  * @description Retrieves all repairs for a specific car from the database, with optional pagination.
  * @param {string} carId - The unique identifier of the car for which repairs are retrieved.
  * @param {number} [page] - The page number for pagination.
- * @returns {Promise<{results: Array<Repair>, count: number}>} A promise that resolves with an object containing the results and count.
+ * @returns {Promise<{results: Array<Repair>, all: Array<Repair>}>} A promise that resolves with an object containing the results and count.
  */
 export async function getAllRepairsByCar(carId, page) {
   const queryParams = JSON.stringify({ 'car': { __type: 'Pointer', className: 'Car', objectId: carId } });
@@ -71,14 +71,14 @@ export async function getAllRepairsByCar(carId, page) {
     await memoization.updateCacheData(cacheId, JSON.parse(JSON.stringify(results)));
   }
 
-  if (!page) return { results, count: results.length };
+  if (!page) return { results, all: results };
 
   const pageSize = 10;
   const startIdx = (page - 1) * pageSize;
   const endIdx = page * pageSize;
   const paginatedResults = results.slice(startIdx, endIdx);
 
-  return { results: paginatedResults, count: results.length };
+  return { results: paginatedResults, all: results };
 }
 
 /**

@@ -1,8 +1,8 @@
 :root {
-  --color-accent: #234465;
+  --color-accent: rgb(35, 68, 101);
   --color-primary: #ffffff;
   --background-color-primary: #ffffff;
-  --background-color-secondary: #eeeeee;
+  --background-color-secondary: rgb(238, 238, 238);
 
   --default-border: 1px solid #666666;
   --default-border-radius: 3px;
