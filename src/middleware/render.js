@@ -57,7 +57,7 @@ function saveContextVariables(ctx) {
 
   const user = getUserData();
   if (user && user.isSuperUser) {
-    const match = ctx.pathname.match(/\/[^/]+\/([^/]+)/);
+    const match = ctx.pathname.match(/\/admin\/([^/]+)/);
     if (match) ctx.params.userId = match[1];
   }
 
