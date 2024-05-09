@@ -39,6 +39,9 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) return 'vendor';
+        },
         dir: outputFolder,
         chunkFileNames: '[name].js',
         entryFileNames: '[name].js',
