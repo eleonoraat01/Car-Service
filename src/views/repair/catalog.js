@@ -2,9 +2,8 @@ import page from 'page';
 import { until } from 'lit/directives/until.js';
 import { getCarById, getAllRepairsByCar } from '../../api';
 import { repairCatalog as template } from '../../templates';
-import { currencyFormatter, getDay, getFont, getQueryParam, notice } from '../../utilities';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { currencyFormatter, getDay, getQueryParam, notice } from '../../utilities';
+import { PDF } from '../../export/pdf';
 
 /**
  * @description Renders the `catalog with repairs` page.
@@ -57,45 +56,7 @@ async function onExport(event, car, repairs) {
 
   if (!car || !repairs?.length) return;
 
-  const doc = new jsPDF();
-
-  // Add cyrillic supported font
-  const fontFile = 'Roboto-Regular.ttf';
-  const fontFace = 'Roboto';
-  const font = await getFont(fontFile);
-  doc.addFileToVFS(fontFile, font);
-  doc.addFont(fontFile, fontFace, 'normal');
-  doc.setFont(fontFace);
-
-  // Info about the company
-  doc.text('Автомобилен сервиз', 105, 10, { align: 'center' });
-  doc.setFontSize(14);
-  doc.text('ул. "Цар Симеон" 99', 105, 16, { align: 'center' });
-  doc.text('София, България', 105, 22, { align: 'center' });
-  doc.text('Телефон: 0888 888 888', 105, 28, { align: 'center' });
-  doc.setFontSize(16);
-
-  // Generate the car table
-  autoTable(doc, {
-    theme: 'grid',
-    head: [['Име на клиента', 'VIN', 'Pегистрационен номер', 'Марка / Модел', 'Двигател'],],
-    body: [[car.customerName, car.vin, car.registration, car.make, car.engine]],
-    margin: { top: 45 },
-    styles: {
-      font: fontFace,
-      textColor: [35, 68, 101],
-    },
-    headStyles: {
-      fillColor: [35, 68, 101],
-      textColor: 255,
-    },
-    alternateRowStyles: {
-      fillColor: [238, 238, 238],
-    },
-    tableLineWidth: 0.5,
-    tableLineColor: [35, 68, 101],
-  });
-
+  const carData = [[car.customerName, car.vin, car.registration, car.make, car.engine]];
   const repairsData = repairs.map(repair => {
     return [
       getDay(repair.date),
@@ -105,32 +66,13 @@ async function onExport(event, car, repairs) {
     ];
   });
 
-  // Generate repairs table
-  autoTable(doc, {
-    theme: 'grid',
-    head: [['Дата на ремонт', 'Постъпващи километри', 'Платена сума', 'Забележка']],
-    body: repairsData,
-    margin: { top: 45 },
-    styles: {
-      font: fontFace,
-      textColor: [35, 68, 101],
-    },
-    headStyles: {
-      fillColor: [35, 68, 101],
-      textColor: 255,
-    },
-    alternateRowStyles: {
-      fillColor: [238, 238, 238],
-    },
-    tableLineWidth: 0.5,
-    tableLineColor: [35, 68, 101],
-  });
+  const doc = new PDF();
+  await doc.applyFont();
 
-  // Add space for signature and stamp
-  doc.setFontSize(12);
-  doc.text('Предаващ: ........................', 20, 285, { align: 'left' });
-  doc.text('Получател: ........................', 140, 285, { align: 'left' });
-
-  // Save the PDF
-  doc.save('repairs.pdf');
+  doc
+    .addHeader()
+    .generateCarTable(carData)
+    .generateRepairTable(repairsData)
+    .addFooter()
+    .save(`Всични ремонти на ${car.customerName}.pdf`);
 }

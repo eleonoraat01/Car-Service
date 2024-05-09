@@ -1,8 +1,9 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getRepairById, deleteRepair } from '../../api';
+import { getRepairById, deleteRepair, getCarById } from '../../api';
 import { repairDetails as template } from '../../templates';
-import { notice } from '../../utilities';
+import { currencyFormatter, getDay, notice } from '../../utilities';
+import { PDF } from '../../export/pdf';
 
 /**
  * @description Renders the `details for a repair` page and handles the deletion of a repair.
@@ -16,7 +17,12 @@ export function detailsRepairPage(ctx) {
     const data = await getPageData(carId, repairId);
     if (!data) return;
 
-    return template({ repair: data, prev, onDelete: (event) => onDelete(event, data) });
+    return template({
+      repair: data,
+      prev,
+      onExport: (event) => onExport(event, data),
+      onDelete: (event) => onDelete(event, data),
+    });
   })(), notice.showLoading()));
 }
 
@@ -36,6 +42,37 @@ async function getPageData(carId, repairId) {
   } finally {
     notice.hideLoading();
   }
+}
+
+/**
+ * @description Handles the export event for a repair.
+ * @param {Event} event - The form deletion event.
+ * @param {Repair} repair - The repair object to be deleted.
+ */
+async function onExport(event, repair) {
+  event.preventDefault();
+  if (!repair) return;
+
+  const car = await getCarById(repair.car.objectId);
+  if (!car) return;
+
+  const carData = [[car.customerName, car.vin, car.registration, car.make, car.engine]];
+  const repairData = [[
+    getDay(repair.date),
+    `${repair.km} km`,
+    currencyFormatter(repair.profit),
+    repair.description
+  ]];
+
+  const doc = new PDF();
+  await doc.applyFont();
+
+  doc
+    .addHeader()
+    .generateCarTable(carData)
+    .generateRepairTable(repairData)
+    .addFooter()
+    .save(`Ремонт на ${car.customerName} от ${getDay(repair.date)}.pdf`);
 }
 
 /**
