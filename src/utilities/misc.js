@@ -102,10 +102,20 @@ export function generateUUID() {
 export async function getFont(fontFace) {
   if (FONT_CACHE.has(fontFace)) return FONT_CACHE.get(fontFace);
 
-  const fontResponse = await fetch(`/assets/fonts/${fontFace}`, { mode: 'no-cors' });
-  const fontBuffer = await fontResponse.arrayBuffer();
+  const base = `${import.meta.env.VITE_APP_HOST_URL}/assets/fonts/`;
+  const response = await fetch(`${base}${fontFace}`, { mode: 'no-cors' });
+  const blob = await response.blob();
 
-  const font = new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '');
+  const base64data = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
+  const fontExtension = fontFace.split('.').pop();
+  const font = base64data.slice(`data:font/${fontExtension};base64,`.length);
 
   FONT_CACHE.set(fontFace, font);
   return font;

@@ -58,6 +58,7 @@ export default defineConfig({
   },
   plugins: [
     viteStaticCopy({ targets: [{ src: `${assetsFolder}/images`, dest: assetsFolder }] }),
+    viteStaticCopy({ targets: [{ src: `${assetsFolder}/fonts`, dest: assetsFolder }] }),
     viteBanner({ outDir: outputFolder, content: banner }),
     createHtmlPlugin({ minify: true, inject: { data: { APP_HOST_URL: process.env.VITE_APP_HOST_URL } } }),
     {

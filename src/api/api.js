@@ -12,7 +12,7 @@ async function request(path, options) {
   const response = await fetch(url, options);
 
   if (response.ok !== true) {
-    if (response.status === 403) await removeUserData();
+    if (response.status >= 400 && response.status < 500) await removeUserData();
 
     const error = await response.json();
     throw new Error(`${error.message || error.error} Status: ${response.status}`, { cause: response });

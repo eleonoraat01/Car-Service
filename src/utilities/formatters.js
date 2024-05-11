@@ -1,4 +1,3 @@
-
 const CURRENCY_FORMATTER = new Intl.NumberFormat('bg-BG', { style: 'currency', currency: 'BGN' });
 
 /**
