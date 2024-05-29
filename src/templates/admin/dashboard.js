@@ -1,11 +1,10 @@
-import page from 'page';
 import { html } from 'lit';
 import { Chart, registerables } from 'chart.js';
 import config from '../../config';
 import { currencyFormatter, makeQueryParam } from '../../utilities';
+import { RANGE_OPTIONS } from '../../utilities/rangeOptions';
 
 Chart.register(...registerables);
-
 
 /**
  * @typedef {object} AdminPageProps
@@ -13,7 +12,10 @@ Chart.register(...registerables);
  * @property {number} numberOfUsers - The total number of users.
  * @property {import('../../views/admin/dashboard').RepairsData} repairs - The array of users.
  * @property {number} pageNumber - The current page number.
+ * @property {string} userProfit - The user profit query parameter.
+ * @property {string} userRepairs - The user repairs query parameter.
  * @property {(event: Event, user: UserAuthData) => void} onBrowseAsUser - The function to be called when the browse as user button is clicked.
+ * @property {(event: Event, type: string) => void} onRangeSelect - The function to be called when the range is selected.
  */
 
 /**
@@ -22,18 +24,21 @@ Chart.register(...registerables);
  * @returns {import('lit').TemplateResult} The rendered template.
  */
 export default (data) => {
-  const { users, numberOfUsers, repairs, pageNumber, onBrowseAsUser } = data;
+  const { users, numberOfUsers, repairs, pageNumber, userProfit, userRepairs, onBrowseAsUser, onRangeSelect } = data;
   const totalPages = Math.max(Math.ceil(numberOfUsers / config.usersPerPage), 1);
-
-  const userNames = Object.keys(repairs);
-  const userData = Object.values(repairs);
 
   return html`
     <section id="admin-page">
       <span class="title">Aдминистраторско табло</span>
       <div class="container">
-        <div class="chart">${renderUserRepairsChart(userNames, userData.map(x => x.count))}</div>
-        <div class="chart">${renderUserProfitChart(userNames, userData.map(p => p.profit))}</div>
+        <div class="chart">
+          ${renderDropdownMenu(onRangeSelect, 'userRepairs', userRepairs)}
+          ${renderUserRepairsChart(Object.keys(repairs.count), Object.values(repairs.count))}
+        </div>
+        <div class="chart">
+          ${renderDropdownMenu(onRangeSelect, 'userProfit', userProfit)}
+          ${renderUserProfitChart(Object.keys(repairs.profit), Object.values(repairs.profit))}
+        </div>
       </div>
 
       ${renderTable(users, onBrowseAsUser)}
@@ -93,6 +98,23 @@ const renderUserRepairsChart = (labels, data) => {
   });
 
   return canvas;
+};
+
+/**
+ * @description Renders a dropdown menu with options based on the given range options.
+ * @param {(event: Event, type: string) => void} onRangeSelect - The function to be called when the range is selected.
+ * @param {string} type - The type of the dropdown menu.
+ * @param {string} query - The currently selected option.
+ * @returns {import('lit').TemplateResult} The HTML template string.
+ */
+const renderDropdownMenu = (onRangeSelect, type, query) => {
+  return html`
+    <select class="dropdown" @change=${(e) => onRangeSelect(e, type)}>
+      ${Object.entries(RANGE_OPTIONS).map(([key, { label }]) => html`
+        <option .selected=${query === key} value=${key}>${label}</option>
+      `)}
+    </select>
+  `;
 };
 
 /**

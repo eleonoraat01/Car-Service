@@ -214,6 +214,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 50%;
   height: min(40vh, 300px);
   float: left;
@@ -222,6 +223,13 @@
   border: var(--default-border);
   border-radius: var(--default-border-radius);
   box-shadow: var(--default-box-shadow);
+}
+
+#admin-page .dropdown {
+  margin-left: auto;
+  margin-right: 1vmax;
+  align-self: baseline;
+
 }
 
 @media (max-width: 600px) {
