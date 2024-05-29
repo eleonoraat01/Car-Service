@@ -39,8 +39,9 @@ export async function createCar(data, userId) {
  * @returns {Promise<{results: Array<Car>, count: number}>} A promise that resolves with an object containing the results and count.
  */
 export async function getAllCars(page, searchCategory, searchQuery, userId) {
-  const queryParams = searchCategory && searchQuery ? JSON.stringify({ [searchCategory]: { $regex: `(?i)${searchQuery}` } }) : null;
-  const userQuery = userId ? JSON.stringify({ owner: { __type: 'Pointer', className: '_User', objectId: userId } }) : null;
+  const queryParams = searchCategory && searchQuery ? { [searchCategory]: { $regex: `(?i)${searchQuery}` } } : null;
+  const userParams = userId ? { owner: { __type: 'Pointer', className: '_User', objectId: userId } } : null;
+  const query = JSON.stringify({ ...queryParams, ...userParams });
 
   const cacheId = '/cars';
   const cachedData = /**@type {Array<Car> | undefined | null}*/(await memoization.getCacheData(cacheId));
@@ -48,10 +49,10 @@ export async function getAllCars(page, searchCategory, searchQuery, userId) {
   let results;
 
   if (!queryParams) {
-    results = cachedData ?? /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(userQuery ?? ''))).results;
+    results = cachedData ?? /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(query))).results;
     if (!cachedData) await memoization.updateCacheData(cacheId, results);
   } else {
-    ({ results } = /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(queryParams.concat(userQuery ?? '')))));
+    ({ results } = /**@type {{results: Array<Car>}}*/(await api.GET(CAR_ENDPOINTS.ALL_CARS(query))));
   }
 
   if (!page) return { results, count: results.length };

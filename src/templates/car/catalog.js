@@ -1,7 +1,8 @@
 import page from 'page';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { makeQueryParam } from '../../utilities';
 import config from '../../config';
+import { getUserData } from '../../api';
 
 /**
  * @typedef {object} CarCatalogPageProps
@@ -70,6 +71,8 @@ const renderContent = (cars, onDelete) => {
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
 const renderTable = (cars, onDelete) => {
+  const isSuperUser = !!getUserData()?.isSuperUser;
+
   return html`
     <table role="table">
       <thead role="rowgroup">
@@ -81,11 +84,11 @@ const renderTable = (cars, onDelete) => {
           <th role="columnheader">Име на клиента</th>
           <th role="columnheader">Ремонти</th>
           <th role="columnheader">Редакция</th>
-          <th role="columnheader">Изтриване</th>
+          ${isSuperUser ? html`<th role="columnheader">Изтриване</th>` : nothing}
         </tr>
       </thead>
       <tbody role="rowgroup">
-        ${cars.map(car => renderTableRow(car, onDelete))}
+        ${cars.map(car => renderTableRow(car, isSuperUser, onDelete))}
       </tbody>
     </table>
   `;
@@ -94,10 +97,11 @@ const renderTable = (cars, onDelete) => {
 /**
  * @description Render a table row for a car entry.
  * @param {Car} car - The car object.
+ * @param {boolean} isSuperUser - A flag indicating if the user is a super user.
  * @param {(event: Event, car: Car) => void} onDelete - The function to be called when the delete button is clicked.
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
-const renderTableRow = (car, onDelete) => {
+const renderTableRow = (car, isSuperUser, onDelete) => {
   return html`
     <tr role="row">
       <td role="cell" data-cell-content="Рама">${car.vin}</td>
@@ -119,14 +123,26 @@ const renderTableRow = (car, onDelete) => {
           </a>
         </div>
       </td>
-      <td role="cell" data-cell-content="Изтриване">
-        <div class="buttons">
-          <button data-button-type="danger" @click=${(e) => onDelete(e, car)}>
-            <i class="material-icons">delete_forever</i>
-          </button>
-        </div>
-      </td>
+      ${isSuperUser ? renderDeleteButton(car, onDelete) : nothing}
     </tr>
+  `;
+};
+
+/**
+ * @description Renders the delete button for a car in the catalog.
+ * @param {Car} car - The car object.
+ * @param {(event: Event, car: Car) => void} onDelete - The function to be called when the delete button is clicked.
+ * @returns {import('lit').TemplateResult} The HTML template string.
+ */
+const renderDeleteButton = (car, onDelete) => {
+  return html`
+    <td role="cell" data-cell-content="Изтриване">
+      <div class="buttons">
+        <button data-button-type="danger" @click=${(e) => onDelete(e, car)}>
+          <i class="material-icons">delete_forever</i>
+        </button>
+      </div>
+   </td>
   `;
 };
 

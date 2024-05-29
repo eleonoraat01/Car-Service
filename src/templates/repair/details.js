@@ -1,6 +1,7 @@
 import page from 'page';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { formatDateToLocale } from '../../utilities';
+import { getUserData } from '../../api';
 
 /**
  * @typedef {object} RepairDetailsPageProps
@@ -17,6 +18,7 @@ import { formatDateToLocale } from '../../utilities';
  */
 export default (data) => {
   const { repair, prev, onExport, onDelete } = data;
+  const isSuperUser = !!getUserData()?.isSuperUser;
 
   return html`
     <section id="details-page">
@@ -56,7 +58,7 @@ export default (data) => {
             <a role="button" data-button-type="info" href="${page.base()}/cars/${repair.car.objectId}/repairs/${repair.objectId}/edit">Редактирай</a>
             <a role="button" href="${prev}">Назад</a>
             <button data-button-type="info" @click=${onExport}>Експорт</button>
-            <button data-button-type="danger" @click=${onDelete}>Изтрий</button>
+            ${isSuperUser ? html`<button data-button-type="danger" @click=${onDelete}>Изтрий</button>` : nothing}
           </div>
         </fieldset>
       </form>
