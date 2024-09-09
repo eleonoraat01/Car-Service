@@ -36,15 +36,17 @@ export function updateNavigation(ctx) {
  * @param {Context} ctx - The context object containing the necessary information.
  */
 function updatePathForAdmin(ctx) {
-  const { userId } = ctx.params;
+  const base = import.meta.env.VITE_APP_HOST_URL;
 
   userNavigation.forEach((element) => {
     Array.from(element.children).forEach(child => {
       const link = /**@type {HTMLAnchorElement}*/(child.firstChild);
-      if (link.id || link.getAttribute('href')?.includes('/admin')) return;
+      const href = link.getAttribute('href') || '';
 
-      const href = `/admin/${userId}${link.getAttribute('href')}`;
-      link.setAttribute('href', href);
+      if (link.id || href.includes('/admin')) return;
+
+      const newHref = `${ctx.page.base()}${href.replace(base, '')}`;
+      link.setAttribute('href', newHref);
     });
   });
 }

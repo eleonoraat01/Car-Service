@@ -7,6 +7,7 @@ const metaTag = /**@type {HTMLMetaElement | null}*/(document.querySelector('meta
 
 const authenticationPaths = ['/user/login', '/user/register'];
 const monitoredPaths = ['/cars', '/repairs'];
+const adminPaths = ['/admin'];
 
 /**
  * @description It adds some useful functions to the context object.
@@ -21,12 +22,14 @@ export function decorateContext(ctx, next) {
   updateNavigation(context);
 
   transitionToNextView(() => {
-    const hasUser = hasUserData();
+    const hasUser = getUserData();
+
     const unauthPath = !hasUser && !authenticationPaths.includes(ctx.path);
     const authPath = hasUser && authenticationPaths.includes(ctx.path);
+    const prohibitedPath = !hasUser?.isSuperUser && adminPaths.some(path => ctx.path.includes(path));
 
     if (unauthPath) ctx.page.redirect(authenticationPaths[0]);
-    else if (authPath) window.history.back();
+    else if (prohibitedPath || authPath) window.history.back();
     else next();
   });
 }

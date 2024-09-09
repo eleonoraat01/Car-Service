@@ -20,7 +20,7 @@ class Memoization {
   constructor(cacheName) {
     this.#cacheName = cacheName;
 
-    if (!this.supported) console.warn('Cache API is not supported in this environment');
+    if (!window.caches) console.warn('Cache API is not supported in this environment');
 
     if (!sessionStorage.getItem(config.storageKeys.memoization) && this.supported) {
       sessionStorage.setItem(config.storageKeys.memoization, 'true');
