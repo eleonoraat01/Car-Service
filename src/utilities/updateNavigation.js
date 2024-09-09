@@ -14,7 +14,7 @@ export function updateNavigation(ctx) {
   const browseAsUser = ctx && ctx.pathname.includes('/cars');
 
   adminNavigation.forEach((element) => {
-    if (!user || isAdmin) element.removeAttribute('hidden');
+    if (isAdmin) element.removeAttribute('hidden');
     else element.setAttribute('hidden', '');
   });
 
