@@ -67,7 +67,9 @@ export async function getAllUsers(page) {
   const response = /**@type {unknown}*/(await api.POST(USER_ENDPOINTS.ALL_USERS, {}));
   const { result } = /**@type {{result: Array<UserAuthData>}}*/(response);
 
-  const users = result.filter(user => !user.roles.includes('Admin'));
+  const users = result
+    .filter(user => !user.roles.includes('Admin'))
+    .sort((a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)));
 
   if (!page) return { results: users, count: users.length };
 
