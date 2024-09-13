@@ -6,6 +6,11 @@ export const RANGE_OPTIONS = {
     startDate: null,
     endDate: null,
   },
+  today: {
+    label: 'Днес',
+    startDate: getStartDays(0),
+    endDate: null,
+  },
   last_7_days: {
     label: 'Последните 7 дни',
     startDate: getStartDays(6),
@@ -33,7 +38,7 @@ export const RANGE_OPTIONS = {
  * @param {string} [range] - The range value.
  * @param {string} [from] - The start date.
  * @param {string} [to] - The end date.
- * @returns {RangeOption | undefined} - The range option object.
+ * @returns {RangeOption | undefined} The range option object.
  */
 export function getRangeOption(range, from, to) {
   if (range) return RANGE_OPTIONS[range];
@@ -66,7 +71,7 @@ function getStartDays(offset) {
 /**
  * @description Checks if a given value is a valid date.
  * @param {any} date - The value to be checked.
- * @returns {boolean} - Returns true if the value is a valid date, otherwise false.
+ * @returns {boolean} Returns true if the value is a valid date, otherwise false.
  */
 function isValid(date) {
   const isDate = date instanceof Date ||

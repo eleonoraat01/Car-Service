@@ -92,9 +92,9 @@ function onRangeSelect(event, type, query) {
  * @returns {Promise<RepairsData>} An object containing profit and count for each owner.
  */
 async function getAllRepairsData(userProfitQuery, userRepairsQuery) {
-  const isWithinRange = (date, range) => {
+  const isWithinRange = (/**@type {Date}*/date, /**@type {RangeOption | undefined}*/range) => {
     if (!range || !range.startDate) return true;
-    return date >= range.startDate && date <= (range.endDate || new Date());
+    return date >= range.startDate && (!range.endDate || date <= range.endDate);
   };
 
   const repairs = await getRepairs();
@@ -121,4 +121,7 @@ async function getAllRepairsData(userProfitQuery, userRepairsQuery) {
 
 /**
  * @typedef {{count: Record<string, number>, profit: Record<string, number>}} RepairsData
+ */
+/**
+ * @typedef {import('../../utilities/rangeOptions').RangeOption} RangeOption
  */
