@@ -63,13 +63,15 @@
   text-align: center;
 }
 
-#catalog-page form .search {
+#catalog-page form .search,
+#details-page form .search {
   display: flex;
   gap: 1vw;
   padding-block: max(1vh, 5px);
 }
 
-#catalog-page form .search>* {
+#catalog-page form .search>*,
+#details-page form .search>* {
   flex: 1;
 }
 
@@ -219,7 +221,7 @@
   height: min(40vh, 300px);
   float: left;
   margin-bottom: 1rem;
-  padding-block-end: 1vmax;
+  padding-block-end: 1.5rem;
   border: var(--default-border);
   border-radius: var(--default-border-radius);
   box-shadow: var(--default-box-shadow);
