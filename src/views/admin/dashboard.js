@@ -97,7 +97,12 @@ async function getAllRepairsData(userProfitQuery, userRepairsQuery) {
     return date >= range.startDate && (!range.endDate || date <= range.endDate);
   };
 
-  const repairs = await getRepairs();
+  const repairs = (await getRepairs(true)).sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+    return Number(dateB) - Number(dateA);
+  });
+
   const repairsCountRange = getRangeOption(userRepairsQuery);
   const repairsProfitRange = getRangeOption(userProfitQuery);
 

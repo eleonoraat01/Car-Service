@@ -83,9 +83,12 @@
  * @property {string} engine - The engine details of the car.
  * @property {string} customerName - The name of the customer associated with the car.
  * @property {object} owner - The owner object pointer of the car.
- * @property {string} owner.objectId - The unique identifier of the owner.
+ * @property {string} owner.objectId - The unique identifier of the owner of the cat.
+ * @property {string} [owner.username] - The username associated with the owner of the car.
  * @property {'_User'} owner.className - The class name of the owner.
  * @property {'Pointer'} owner.__type - The type of the owner object pointer.
+ * @property {string} [owner.createdAt] - The server creation timestamp of the owner of the car (ISO 8601 format).
+ * @property {string} [owner.updatedAt] - The server last update timestamp of the owner of the car (ISO 8601 format).
  * @property {string} createdAt - The server creation timestamp of the car object (ISO 8601 format).
  * @property {string} [updatedAt] - The server last update timestamp of the car object (ISO 8601 format).
  */

@@ -44,11 +44,13 @@ export async function createRepair(carId, data, userId) {
 
 /**
  * @description Retrieves all repairs from the database.
- * @returns {Promise<Array<Repair & { owner: { username:string } }>>} A promise that resolves with an array of repairs.
+ * @param {boolean} [removeLimit] - A flag to remove the limit of 1000 repairs.
+ * @returns {Promise<Array<Repair & { owner: { username: string, createdAt: string } }>>} A promise that resolves with an array of repairs.
  */
-export async function getRepairs() {
-  const response =/**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS));
-  return /**@type {Array<Repair & { owner: { username:string } }>}*/(response.results);
+export async function getRepairs(removeLimit) {
+  const queryParams = removeLimit ? { 'limit': '9999' } : undefined;
+  const response =/**@type {{results: Array<Repair>}}*/(await api.GET(REPAIR_ENDPOINTS.ALL_REPAIRS(queryParams)));
+  return /**@type {Array<Repair & { owner: { username: string, createdAt: string } }>}*/(response.results);
 }
 
 /**

@@ -76,9 +76,10 @@ export const REPAIR_ENDPOINTS = {
 
   /**
    * @description Endpoint to retrieve all repairs with optional query parameters.
+   * @param {Record<string, string>} [params] - The query parameter for filtering repairs.
    * @returns {string} The formatted endpoint URL.
    */
-  ALL_REPAIRS: `/classes/Repair?${makeQueryParam({ order: '-date', include: 'owner' })}`,
+  ALL_REPAIRS: (params = {}) => `/classes/Repair?${makeQueryParam({ order: '-date', include: 'owner', ...params })}`,
 
   /**
    * @description Endpoint to retrieve a repair by its ID.
