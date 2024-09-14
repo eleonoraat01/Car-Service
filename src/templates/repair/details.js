@@ -25,7 +25,7 @@ export default (data) => {
 
           <fieldset class="search">
             <div class="buttons">
-              <a role="button" data-button-type="info" href="${page.base()}/cars/${repair.car.objectId}/repairs/${repair.objectId}/edit">Редактирай</a>
+              <a role="button" href="${page.base()}/cars/${repair.car.objectId}/repairs/${repair.objectId}/edit">Редактирай</a>
               <button data-button-type="info" @click=${onExport}>Експорт</button>
               <a role="button" href="${prev}">Назад</a>
             </div>
