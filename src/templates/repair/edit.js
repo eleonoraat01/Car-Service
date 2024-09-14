@@ -34,13 +34,13 @@ export default (data) => {
             </div>
 
             <div class="field">
-              <label for="repair__profit">Дължима сума:</label>
-              <input name="profit" id="repair__profit" type="text" .value=${repair.profit} />
+              <label for="repair__profit">Дължима сума: <span class='required'>*</span></label>
+              <input name="profit" id="repair__profit" type="text" .value=${repair.profit} required @invalid="${({ target }) => target.setCustomValidity('Полето е задължително!')}" @input="${({ target }) => target.setCustomValidity('')}" />
             </div>
 
             <div class="field">
-              <label for="repair__description">Забележка:</label>
-              <textarea data-scrollbar name="description" id="repair__description" .value=${repair.description} @keyup="${({ target }) => { if (target.scrollHeight > target.clientHeight) target.style.setProperty('height', target.scrollHeight + 'px'); }}"></textarea>
+              <label for="repair__description">Забележка: <span class='required'>*</span></label>
+              <textarea data-scrollbar name="description" id="repair__description" .value=${repair.description} @keyup="${({ target }) => { if (target.scrollHeight > target.clientHeight) target.style.setProperty('height', target.scrollHeight + 'px'); }}" required @invalid="${({ target }) => target.setCustomValidity('Полето е задължително!')}" @input="${({ target }) => target.setCustomValidity('')}" ></textarea>
             </div>
           </fieldset>
 
