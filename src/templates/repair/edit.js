@@ -34,7 +34,7 @@ export default (data) => {
             </div>
 
             <div class="field">
-              <label for="repair__profit">Платена сума:</label>
+              <label for="repair__profit">Дължима сума:</label>
               <input name="profit" id="repair__profit" type="text" .value=${repair.profit} />
             </div>
 

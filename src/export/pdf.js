@@ -97,7 +97,7 @@ export class PDF {
   generateRepairTable(data, options = {}) {
     autoTable(this._doc, {
       theme: 'grid',
-      head: [['Дата на ремонт', 'Постъпващи километри', 'Платена сума', 'Забележка']],
+      head: [['Дата на ремонт', 'Постъпващи километри', 'Дължима сума', 'Забележка']],
       body: data,
       margin: { top: 45 },
       styles: {
