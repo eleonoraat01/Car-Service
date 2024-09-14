@@ -39,9 +39,9 @@ export function formatDateToISO(date) {
  * @param {string | number | Date} [date] - The date from which to extract the day.
  * @returns {string} The day in 'YYYY-MM-DD' format.
  */
-export function getDay(date = Date.now()) {
+export function getDay(date) {
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-  const adjustedDate = Number(new Date(date).getTime() + timeZoneOffset);
+  const adjustedDate = date ? Number(new Date(date).getTime() + timeZoneOffset) : Date.now();
   return new Date(adjustedDate - timeZoneOffset).toISOString().split('T')[0];
 }
 
