@@ -5,6 +5,8 @@ import { getQueryParam, makeQueryParam, notice } from '../../utilities';
 import { getRepairs, getAllUsers } from '../../api';
 import { getRangeOption } from '../../utilities/rangeOptions';
 
+const DEFAULT_RANGE = 'today';
+
 /**
  * @description Renders the `admin` page.
  * @param {Context} ctx - The context object.
@@ -33,7 +35,7 @@ export async function adminPage(ctx) {
  * @param {string} [userRepairs] - The user repairs query parameter.
  * @returns {Promise<{users: Array<UserAuthData>, numberOfUsers: number, repairs: RepairsData, pageNumber: number,userProfit: string, userRepairs: string } | undefined>} A promise that resolves to an array containing the data for all users and repairs.
  */
-async function getPageData(pageNumber, userProfit = '', userRepairs = '') {
+async function getPageData(pageNumber, userProfit = DEFAULT_RANGE, userRepairs = DEFAULT_RANGE) {
   try {
     const [{ results, count }, repairsData] = await Promise.all([
       getAllUsers(pageNumber),
@@ -76,7 +78,7 @@ function onRangeSelect(event, type, query) {
   const value = select.value;
   const range = getRangeOption(value);
 
-  if (value === 'all_time' || !range) delete query[type];
+  if (value === DEFAULT_RANGE || !range) delete query[type];
   else query[type] = value;
 
   const queryParams = makeQueryParam(query);

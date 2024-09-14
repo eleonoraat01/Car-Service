@@ -1,11 +1,6 @@
 import { getDay } from './formatters';
 
 export const RANGE_OPTIONS = {
-  all_time: {
-    label: 'Всички',
-    startDate: null,
-    endDate: null,
-  },
   today: {
     label: 'Днес',
     startDate: getStartDays(0),
@@ -29,6 +24,11 @@ export const RANGE_OPTIONS = {
   last_365_days: {
     label: 'Последните 365 дни',
     startDate: getStartDays(364),
+    endDate: null,
+  },
+  all_time: {
+    label: 'Всички',
+    startDate: null,
     endDate: null,
   },
 };
