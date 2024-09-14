@@ -74,7 +74,7 @@ async function onExport(event, car, repairs) {
     .generateCarTable(carData)
     .generateRepairTable(repairsData)
     .addFooter()
-    .save(`Всични ремонти на ${car.customerName}.pdf`);
+    .save(`Всички ремонти на ${car.customerName}.pdf`);
 }
 
 /**
