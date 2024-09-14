@@ -128,8 +128,8 @@ const renderTable = (users, onBrowseAsUser) => {
     <table role="table">
       <thead role="rowgroup">
         <tr role="row">
-          <th role="columnheader">Име</th>
-          <th role="columnheader">Разглеждайте като потребител</th>
+          <th role="columnheader">Потребителско име</th>
+          <th role="columnheader">Преглед като потребител</th>
         </tr>
       </thead>
       <tbody role="rowgroup">
