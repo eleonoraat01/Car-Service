@@ -1,8 +1,8 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getCarById, getAllRepairsByCar } from '../../api';
+import { getCarById, getAllRepairsByCar, deleteRepair } from '../../api';
 import { repairCatalog as template } from '../../templates';
-import { currencyFormatter, getDay, getQueryParam, notice } from '../../utilities';
+import { currencyFormatter, formatDateToLocale, getDay, getQueryParam, notice } from '../../utilities';
 import { PDF } from '../../export/pdf';
 
 /**
@@ -18,7 +18,7 @@ export function repairsCatalogPage(ctx) {
     const data = await getPageData(carId, Number(pageNumber) || 1);
     if (!data) return;
 
-    return template({ ...data, prev, onExport });
+    return template({ ...data, prev, onExport, onDelete });
   })(), notice.showLoading()));
 }
 
@@ -75,4 +75,35 @@ async function onExport(event, car, repairs) {
     .generateRepairTable(repairsData)
     .addFooter()
     .save(`Всични ремонти на ${car.customerName}.pdf`);
+}
+
+/**
+ * @description Handles the delete event for a repair.
+ * @param {Event} event - The form deletion event.
+ * @param {Repair} repair - The repair object to be deleted.
+ */
+async function onDelete(event, repair) {
+  event.preventDefault();
+
+  const confirm = await new Promise(resolve => {
+    return notice.showModal({
+      message: `Сигурен ли си, че искаш да изтриеш ремонта от дата ${formatDateToLocale(repair.date)}`,
+      onConfirm: () => resolve(true),
+      onCancel: () => resolve(false)
+    });
+  });
+
+  if (!confirm) return;
+
+  try {
+    notice.showLoading();
+    await deleteRepair(repair.car.objectId, repair.objectId);
+    notice.showToast({ text: 'Успешно изтрихте ремонта', type: 'info' });
+  } catch (error) {
+    const errorMessages = error instanceof Error ? error.message : 'Възникна грешка, моля опитайте по-късно';
+    notice.showToast({ text: errorMessages, type: 'error' });
+  } finally {
+    notice.hideLoading();
+    page.redirect(`/cars/${repair.car.objectId}/repairs`);
+  }
 }

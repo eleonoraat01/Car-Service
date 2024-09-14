@@ -1,5 +1,6 @@
 import page from 'page';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
+import { getUserData } from '../../api';
 import { makeQueryParam, formatDateToLocale } from '../../utilities';
 import config from '../../config';
 
@@ -11,6 +12,7 @@ import config from '../../config';
  * @property {number} pageNumber - The current page number.
  * @property {string} prev - The previous page path.
  * @property {(event: Event, car: Car, repairs: Array<Repair>) => void} onExport - The function to be called when the export button is clicked.
+ * @property {(event: Event, repair: Repair) => void} onDelete - The function to be called when the delete button is clicked.
  */
 
 /**
@@ -19,14 +21,14 @@ import config from '../../config';
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
 export default (data) => {
-  const { repairs, allRepairs, car, pageNumber, prev, onExport } = data;
+  const { repairs, allRepairs, car, pageNumber, prev, onExport, onDelete } = data;
   const totalPages = Math.max(Math.ceil(allRepairs.length / config.itemsPerPage), 1);
 
   return html`
     <section id="catalog-page">
       <form autocomplete="off">
         <fieldset>
-          <legend>Всичките ремонти на ${car.customerName} - "${car.registration}"</legend>
+          <legend>Всички ремонти на ${car.customerName} - рег. &numero; ${car.registration}</legend>
 
           <fieldset class="search">
             <div class="buttons">
@@ -36,7 +38,7 @@ export default (data) => {
             </div>
           </fieldset>
 
-          ${renderContent(repairs)}
+          ${renderContent(repairs, onDelete)}
 
           <fieldset class="pagination">
             ${renderPaginationLinks(pageNumber, totalPages)}
@@ -50,19 +52,23 @@ export default (data) => {
 /**
  * @description Render the content based on the repairs data.
  * @param {Array<Repair>} repairs - The array of repairs.
+ * @param {(event: Event, repair: Repair) => void} onDelete - The function to be called when the delete button is clicked.
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
-const renderContent = (repairs) => {
-  if (repairs.length > 0) return renderTable(repairs);
+const renderContent = (repairs, onDelete) => {
+  if (repairs.length > 0) return renderTable(repairs, onDelete);
   return html`<p class="empty">Нямаш завършени ремонти!</p>`;
 };
 
 /**
  * @description Render the table based on the repairs data.
  * @param {Array<Repair>} repairs - The array of repairs.
+ * @param {(event: Event, repair: Repair) => void} onDelete - The function to be called when the delete button is clicked.
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
-const renderTable = (repairs) => {
+const renderTable = (repairs, onDelete) => {
+  const isSuperUser = !!getUserData()?.isSuperUser;
+
   return html`
     <table role="table">
       <thead role="rowgroup">
@@ -70,10 +76,11 @@ const renderTable = (repairs) => {
           <th role="columnheader">Извършен на</th>
           <th role="columnheader">Километри</th>
           <th role="columnheader">Детайли по ремонта</th>
+          ${isSuperUser ? html`<th role="columnheader">Изтриване</th>` : nothing}
         </tr>
       </thead>
       <tbody role="rowgroup">
-        ${repairs.map(renderTableRow)}
+        ${repairs.map(repair => renderTableRow(repair, isSuperUser, onDelete))}
       </tbody>
     </table>
   `;
@@ -82,9 +89,11 @@ const renderTable = (repairs) => {
 /**
  * @description Render a table row for a repair entry.
  * @param {Repair} repair - The repair object.
+ * @param {boolean} isSuperUser - A flag indicating if the user is a super user.
+ * @param {(event: Event, repair: Repair) => void} onDelete - The function to be called when the delete button is clicked.
  * @returns {import('lit').TemplateResult} The HTML template string.
  */
-const renderTableRow = (repair) => {
+const renderTableRow = (repair, isSuperUser, onDelete) => {
   return html`
     <tr role="row">
       <td role="cell" data-cell-content="Извършен на">${formatDateToLocale(repair.date)}</td>
@@ -94,7 +103,26 @@ const renderTableRow = (repair) => {
           <a role="button" data-button-type="info" href="${page.base()}/cars/${repair.car.objectId}/repairs/${repair.objectId}">Детайли</a>
         </div>
       </td>
+      ${isSuperUser ? renderDeleteButton(repair, onDelete) : nothing}
     </tr>
+  `;
+};
+
+/**
+ * @description Renders the delete button for a repair in the catalog.
+ * @param {Repair} repair - The repair object.
+ * @param {(event: Event, repair: Repair) => void} onDelete - The function to be called when the delete button is clicked.
+ * @returns {import('lit').TemplateResult} The HTML template string.
+ */
+const renderDeleteButton = (repair, onDelete) => {
+  return html`
+    <td role="cell" data-cell-content="Изтриване">
+      <div class="buttons">
+        <button data-button-type="danger" @click=${(e) => onDelete(e, repair)}>
+          <i class="material-icons">delete_forever</i>
+        </button>
+      </div>
+   </td>
   `;
 };
 
