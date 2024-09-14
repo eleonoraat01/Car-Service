@@ -17,7 +17,9 @@ export function currencyFormatter(value) {
  */
 export function formatDateToLocale(date, locales = 'bg-BG') {
   try {
-    return Intl.DateTimeFormat(locales).format(new Date(date));
+    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    const adjustedDate = Number(new Date(date)) + timeZoneOffset;
+    return Intl.DateTimeFormat(locales).format(adjustedDate);
   } catch {
     return date.toString();
   }
@@ -34,15 +36,13 @@ export function formatDateToISO(date) {
 
 /**
  * @description Retrieves the day part of the provided date or the current date if none is specified.
- * @param {string | number | Date} [inputDate] - The date from which to extract the day.
+ * @param {string | number | Date} [date] - The date from which to extract the day.
  * @returns {string} The day in 'YYYY-MM-DD' format.
  */
-export function getDay(inputDate) {
-  const offset = new Date().getTimezoneOffset() * 60000;
-  const date = (inputDate && Number(new Date(inputDate).getTime() + offset)) || Date.now();
-  const ISO = new Date(date - offset).toISOString();
-
-  return ISO.split('T')[0];
+export function getDay(date = Date.now()) {
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  const adjustedDate = Number(new Date(date).getTime() + timeZoneOffset);
+  return new Date(adjustedDate - timeZoneOffset).toISOString().split('T')[0];
 }
 
 /**
