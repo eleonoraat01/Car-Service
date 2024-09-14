@@ -23,8 +23,8 @@ export default (data) => {
 
           <fieldset class="input-fields">
             <div class="field">
-              <label for="car__vin">VIN:</label>
-              <input name="vin" id="car__vin" type="text" />
+              <label for="car__vin">VIN: <span class='required'>*</span></label>
+              <input name="vin" id="car__vin" type="text" required @invalid="${({ target }) => target.setCustomValidity('Полето е задължително!')}" @input="${({ target }) => target.setCustomValidity('')}" />
             </div>
 
             <div class="field">
