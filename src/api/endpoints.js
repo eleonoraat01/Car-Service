@@ -46,7 +46,7 @@ export const CAR_ENDPOINTS = {
    * @param {string} query - The query parameter for filtering cars.
    * @returns {string} The formatted endpoint URL.
    */
-  ALL_CARS: (query = '') => `/classes/Car?${makeQueryParam({ order: '-createdAt', where: query })}`,
+  ALL_CARS: (query = '') => `/classes/Car?${makeQueryParam({ order: '-createdAt', where: query, include: 'owner' })}`,
 
   /**
    * @description Endpoint to retrieve a car by its ID.

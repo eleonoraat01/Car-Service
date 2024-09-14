@@ -23,12 +23,14 @@ import { getUserData } from '../../api';
 export default (data) => {
   const { cars, carsCount, pageNumber, searchCategory, searchQuery, onSearch, onDelete } = data;
   const totalPages = Math.max(Math.ceil(carsCount / config.itemsPerPage), 1);
+  const isSuperUser = !!getUserData()?.isSuperUser;
+  const username = cars[0]?.owner?.username;
 
   return html`
     <section id="catalog-page">
       <form autocomplete="off">
         <fieldset>
-          <legend>Всички автомобили</legend>
+          <legend>Всички автомобили${isSuperUser && username ? ` на "${username}"` : ''}</legend>
 
           <fieldset class="search">
             <label for="search-options" id="search-label" aria-hidden="true">Търсачка</label>
