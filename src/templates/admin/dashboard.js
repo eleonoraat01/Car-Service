@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { Chart, registerables } from 'chart.js';
-import { makeQueryParam, currencyFormatter, RANGE_OPTIONS } from '@utilities';
-import config from '../../config';
+import { renderPaginationLinks } from '@templates';
+import { currencyFormatter, RANGE_OPTIONS } from '@utilities';
 
 Chart.register(...registerables);
 
@@ -42,9 +42,7 @@ export default (data) => {
 
       ${renderTable(users, onBrowseAsUser)}
 
-      <div class="pagination">
-        ${renderPaginationLinks(pageNumber, totalPages)}
-      </div>
+      ${renderPaginationLinks(pageNumber, totalPages)}
     </section>
   `;
 };
@@ -157,63 +155,6 @@ const renderTableRow = (user, onBrowseAsUser) => {
       </td>
     </tr>
   `;
-};
-
-/**
- * @description Render pagination links based on the current page, the total number of pages and the search query.
- * @param {number} pageNumber - The current page number.
- * @param {number} totalPages - The total number of pages.
- * @returns {import('lit').TemplateResult} The HTML template string.
- */
-const renderPaginationLinks = (pageNumber, totalPages) => {
-  /**
-   * @description Generates the URL for a specific page.
-   * @param {number} pageNum - The page number.
-   * @returns {string} The generated URL.
-   */
-  const getLinkUrl = (pageNum) => {
-    const queryParams = makeQueryParam({
-      page: pageNum.toString()
-    });
-
-    return `${window.location.pathname}?${queryParams}`;
-  };
-
-  /**
-   * @description Generates a pagination link element.
-   * @param {any} text - The text or HTML content of the link.
-   * @param {number} pageNum - The page number.
-   * @returns {import('lit').TemplateResult} The pagination link element.
-   */
-  const createPageLink = (text, pageNum) => {
-    const isSamePage = pageNumber === pageNum || pageNum < 1 || pageNum > totalPages;
-    const isCurrentPage = typeof text === 'number' && pageNumber === pageNum;
-    const href = isSamePage ? '#' : getLinkUrl(pageNum);
-    const className = `${isSamePage ? 'not-selectable' : ''} ${isCurrentPage ? 'active' : ''}`;
-
-    return html`<a .href=${href} .className=${className}>${text}</a>`;
-  };
-
-  /**
-   * @description Generates an array of page links based on the current page number, total pages, and a specified maximum number of pages.
-   * @returns {Array<number>} - An array of page link objects.
-   */
-  function generateRelativePageLinks() {
-    const relativePages = Math.floor(config.relativePageLinks / 2);
-    const startPage = Math.min(Math.max(1, pageNumber - relativePages), Math.max(1, totalPages - config.relativePageLinks + 1));
-    const endPage = Math.max(Math.min(totalPages, pageNumber + relativePages), Math.min(totalPages, config.relativePageLinks));
-    const length = Math.min(endPage - startPage + 1, totalPages);
-
-    return Array.from({ length }, (_, i) => startPage + i);
-  }
-
-  const first = createPageLink(html`<i class="material-icons">keyboard_double_arrow_left</i>`, 1);
-  const prev = createPageLink(html`<i class="material-icons">chevron_left</i>`, pageNumber - 1);
-  const pages = generateRelativePageLinks().map(pageNum => createPageLink(pageNum, pageNum));
-  const next = createPageLink(html`<i class="material-icons">chevron_right</i>`, pageNumber + 1);
-  const last = createPageLink(html`<i class="material-icons">keyboard_double_arrow_right</i>`, totalPages);
-
-  return html`${first}${prev}${pages}${next}${last}`;
 };
 
 const colors = {
