@@ -1,9 +1,8 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { adminDashboard as template } from '../../templates';
-import { getQueryParam, makeQueryParam, notice } from '../../utilities';
-import { getRepairs, getAllUsers } from '../../api';
-import { getRangeOption } from '../../utilities/rangeOptions';
+import { getRepairs, getAllUsers } from '@api';
+import { adminDashboard as template } from '@templates';
+import { getRangeOption, getQueryParam, makeQueryParam, notice } from '@utilities';
 
 const DEFAULT_RANGE = 'today';
 

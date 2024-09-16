@@ -1,9 +1,9 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getCarById, getAllRepairsByCar, deleteRepair } from '../../api';
-import { repairCatalog as template } from '../../templates';
-import { currencyFormatter, formatDateToLocale, getDay, getQueryParam, notice } from '../../utilities';
-import { PDF } from '../../export/pdf';
+import { getCarById, getAllRepairsByCar, deleteRepair } from '@api';
+import { repairCatalog as template } from '@templates';
+import { currencyFormatter, formatDateToLocale, getDay, getQueryParam, notice } from '@utilities';
+import { PDF } from '@exports';
 
 /**
  * @description Renders the `catalog with repairs` page.

@@ -3,6 +3,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import viteBanner from 'vite-plugin-banner';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import pkg from './package.json';
+import { fileURLToPath, URL } from 'node:url'
 
 const banner = `
 /**
@@ -68,5 +69,14 @@ export default defineConfig({
         return code;
       },
     }
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@api': fileURLToPath(new URL('./src/api/', import.meta.url)),
+      '@views': fileURLToPath(new URL('./src/views/', import.meta.url)),
+      '@templates': fileURLToPath(new URL('./src/templates/', import.meta.url)),
+      '@utilities': fileURLToPath(new URL('./src/utilities/', import.meta.url)),
+      '@exports': fileURLToPath(new URL('./src/exports/', import.meta.url)),
+    },
+  }
 });

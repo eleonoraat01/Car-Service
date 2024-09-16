@@ -1,12 +1,12 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { getFont } from '../utilities';
+import { getFont } from '@utilities';
 
 /**
  * @classdesc Represents a PDF document.
  * @extends jsPDF
  */
-export class PDF {
+export default class PDF {
   /**
    * @description Represents a PDF object.
    * @param {Partial<import('jspdf').jsPDFOptions>} [options] - The options for configuring the PDF document.

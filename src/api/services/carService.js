@@ -1,7 +1,7 @@
 import * as api from '../api';
 import { CAR_ENDPOINTS } from '../endpoints';
 import { getUserData } from './userService';
-import { memoization } from '../../utilities';
+import { memoization } from '@utilities';
 import config from '../../config';
 
 /**

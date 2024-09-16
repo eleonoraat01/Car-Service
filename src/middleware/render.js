@@ -1,6 +1,6 @@
 import { render } from 'lit';
-import { getUserData, hasUserData } from '../api';
-import { updateNavigation } from '../utilities';
+import { getUserData } from '@api';
+import { updateNavigation } from '@utilities';
 
 const root = document.getElementById('site-content') || document.body;
 const metaTag = /**@type {HTMLMetaElement | null}*/(document.querySelector('meta[name=viewport]'));

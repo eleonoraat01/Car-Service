@@ -1,7 +1,7 @@
 import page from 'page';
 import { html, nothing } from 'lit';
-import { getUserData } from '../../api';
-import { makeQueryParam, formatDateToLocale } from '../../utilities';
+import { getUserData } from '@api';
+import { formatDateToLocale, makeQueryParam } from '@utilities';
 import config from '../../config';
 
 /**

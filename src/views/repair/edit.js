@@ -1,8 +1,8 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getRepairById, editRepair } from '../../api';
-import { repairEdit as template } from '../../templates';
-import { formDataHandler, formatDateToISO, notice } from '../../utilities';
+import { getRepairById, editRepair } from '@api';
+import { repairEdit as template } from '@templates';
+import { formDataHandler, formatDateToISO, notice } from '@utilities';
 
 /**
  * @description Renders the `edit a repair` page and handles the form submission for editing a repair.

@@ -1,4 +1,4 @@
-import { getDay } from './formatters';
+import { getDay } from '@utilities';
 
 export const RANGE_OPTIONS = {
   today: {

@@ -1,6 +1,6 @@
 import page from 'page';
-import { logout } from '../../api';
-import { notice } from '../../utilities';
+import { logout } from '@api';
+import { notice } from '@utilities';
 
 /**
  * @description Logs out the user after confirming their intention to do so.

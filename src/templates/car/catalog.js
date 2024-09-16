@@ -1,8 +1,8 @@
 import page from 'page';
 import { html, nothing } from 'lit';
-import { makeQueryParam } from '../../utilities';
+import { getUserData } from '@api';
+import { makeQueryParam } from '@utilities';
 import config from '../../config';
-import { getUserData } from '../../api';
 
 /**
  * @typedef {object} CarCatalogPageProps

@@ -1,8 +1,7 @@
 import page from 'page';
-import { login } from '../../api';
-import { login as template } from '../../templates';
-import { formDataHandler, notice } from '../../utilities';
-import config from '../../config';
+import { login } from '@api';
+import { login as template } from '@templates';
+import { formDataHandler, notice } from '@utilities';
 
 /**
  * @description Renders the `login` page and handles form submission for logging the user.

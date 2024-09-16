@@ -13,6 +13,15 @@
     "strict": true, // This enables all of the strict mode family options.
     "checkJs": true, // This is the equivalent of including // @ts-check at the top of all JavaScript files which are included in your project.
     "allowUnreachableCode": false, // This allows picking up dead code paths.
+
+    "baseUrl": ".",
+    "paths": {
+      "@api": ["./src/api/"],
+      "@views": ["./src/views/"],
+      "@templates": ["./src/templates/"],
+      "@utilities": ["./src/utilities/"],
+      "@exports": ["src/exports"],
+    }
   },
   "exclude": ["dist", "node_modules"] // This specifies which directories should be excluded from the project.
 }

@@ -1,8 +1,7 @@
 import { html } from 'lit';
 import { Chart, registerables } from 'chart.js';
+import { makeQueryParam, currencyFormatter, RANGE_OPTIONS } from '@utilities';
 import config from '../../config';
-import { currencyFormatter, makeQueryParam } from '../../utilities';
-import { RANGE_OPTIONS } from '../../utilities/rangeOptions';
 
 Chart.register(...registerables);
 
