@@ -1,6 +1,6 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getRepairById, editRepair } from '@api';
+import { getRepairById, editRepair } from '@db';
 import { repairEdit as template } from '@templates';
 import { formDataHandler, formatDateToISO, notice } from '@utilities';
 

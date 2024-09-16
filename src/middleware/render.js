@@ -1,5 +1,5 @@
 import { render } from 'lit';
-import { getUserData } from '@api';
+import { getUserData } from '@db';
 import { updateNavigation } from '@utilities';
 
 const root = document.getElementById('site-content') || document.body;

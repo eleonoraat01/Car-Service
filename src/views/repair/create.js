@@ -1,5 +1,5 @@
 import page from 'page';
-import { createRepair } from '@api';
+import { createRepair } from '@db';
 import { repairCreate as template } from '@templates';
 import { formDataHandler, formatDateToISO, notice } from '@utilities';
 

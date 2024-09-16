@@ -1,4 +1,4 @@
-import { getUserData } from '@api';
+import { getUserData } from '@db';
 
 const adminNavigation = /**@type {NodeListOf<Element>}*/(document.querySelectorAll('.admin-navigation'));
 const userNavigation = /**@type {NodeListOf<Element>}*/(document.querySelectorAll('.user-navigation'));

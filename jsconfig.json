@@ -16,7 +16,7 @@
 
     "baseUrl": ".",
     "paths": {
-      "@api": ["./src/api/"],
+      "@db": ["./src/api/"],
       "@views": ["./src/views/"],
       "@templates": ["./src/templates/"],
       "@utilities": ["./src/utilities/"],

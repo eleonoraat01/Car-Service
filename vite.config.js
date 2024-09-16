@@ -72,7 +72,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@api': fileURLToPath(new URL('./src/api/', import.meta.url)),
+      '@db': fileURLToPath(new URL('./src/api/', import.meta.url)),
       '@views': fileURLToPath(new URL('./src/views/', import.meta.url)),
       '@templates': fileURLToPath(new URL('./src/templates/', import.meta.url)),
       '@utilities': fileURLToPath(new URL('./src/utilities/', import.meta.url)),

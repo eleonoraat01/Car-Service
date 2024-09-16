@@ -1,4 +1,4 @@
-import { getUserData } from '@api';
+import { getUserData } from '@db';
 import config from '../config';
 
 /**

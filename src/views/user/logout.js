@@ -1,5 +1,5 @@
 import page from 'page';
-import { logout } from '@api';
+import { logout } from '@db';
 import { notice } from '@utilities';
 
 /**

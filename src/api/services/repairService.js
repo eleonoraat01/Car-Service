@@ -1,6 +1,6 @@
 import * as api from '../api';
 import { REPAIR_ENDPOINTS } from '../endpoints';
-import { getUserData } from './userService';
+import { getUserData } from '@db';
 import { memoization } from '@utilities';
 
 /**

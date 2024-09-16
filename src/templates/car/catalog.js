@@ -1,6 +1,6 @@
 import page from 'page';
 import { html, nothing } from 'lit';
-import { getUserData } from '@api';
+import { getUserData } from '@db';
 import { renderPaginationLinks } from '@templates';
 import config from '../../config';
 

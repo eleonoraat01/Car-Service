@@ -1,6 +1,6 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getCarById, editCar } from '@api';
+import { getCarById, editCar } from '@db';
 import { carEdit as template } from '@templates';
 import { formDataHandler, notice } from '@utilities';
 

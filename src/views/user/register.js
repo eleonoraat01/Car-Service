@@ -1,5 +1,5 @@
 import page from 'page';
-import { register } from '@api';
+import { register } from '@db';
 import { register as template } from '@templates';
 import { formDataHandler, notice } from '@utilities';
 

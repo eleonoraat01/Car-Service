@@ -1,5 +1,5 @@
 import page from 'page';
-import { createCar } from '@api';
+import { createCar } from '@db';
 import { carCreate as template } from '@templates';
 import { formDataHandler, notice } from '@utilities';
 

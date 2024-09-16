@@ -1,6 +1,6 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getRepairById, getCarById } from '@api';
+import { getRepairById, getCarById } from '@db';
 import { repairDetails as template } from '@templates';
 import { currencyFormatter, getDay, notice } from '@utilities';
 import { PDF } from '@exports';

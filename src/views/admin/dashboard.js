@@ -1,6 +1,6 @@
 import page from 'page';
 import { until } from 'lit/directives/until.js';
-import { getRepairs, getAllUsers } from '@api';
+import { getRepairs, getAllUsers } from '@db';
 import { adminDashboard as template } from '@templates';
 import { getRangeOption, getQueryParam, makeQueryParam, notice } from '@utilities';
 
