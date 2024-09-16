@@ -3,6 +3,9 @@ import { USER_ENDPOINTS } from '../endpoints';
 import { memoization, updateNavigation } from '@utilities';
 import config from '../../config';
 
+const STORAGE_KEY = config.storageKeys.userService;
+const SHOWN_USERS_PER_PAGE = config.adminDashboard.shownUsersPerPage;
+
 /**
  * @description Performs a user login operation with the provided user credentials. Upon successful authentication, the user's information is stored in the session storage and the navigation bar is updated.
  * @param {UserLoginCredentials} data - User credentials.
@@ -73,8 +76,8 @@ export async function getAllUsers(page) {
 
   if (!page) return { results: users, count: users.length };
 
-  const startIdx = (page - 1) * config.usersPerPage;
-  const endIdx = page * config.usersPerPage;
+  const startIdx = (page - 1) * SHOWN_USERS_PER_PAGE;
+  const endIdx = page * SHOWN_USERS_PER_PAGE;
   const paginatedResults = users.slice(startIdx, endIdx);
 
   return { results: paginatedResults, count: users.length };
@@ -85,7 +88,7 @@ export async function getAllUsers(page) {
  * @returns {boolean} Returns true if user data is present, otherwise false.
  */
 export function hasUserData() {
-  return !!sessionStorage.getItem(config.storageKeys.userService);
+  return !!sessionStorage.getItem(STORAGE_KEY);
 }
 
 /**
@@ -93,7 +96,8 @@ export function hasUserData() {
  * @returns {UserStoredData | null} Returns the parsed user data if it exists, otherwise returns null.
  */
 export function getUserData() {
-  return JSON.parse(sessionStorage.getItem(config.storageKeys.userService) ?? 'null');
+  const STORAGE_KEY = config.storageKeys.userService; // To avoid circular dependency error
+  return JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? 'null');
 }
 
 /**
@@ -102,7 +106,7 @@ export function getUserData() {
  */
 export async function setUserData(data) {
   await memoization.deleteCache().catch(console.error);
-  sessionStorage.setItem(config.storageKeys.userService, JSON.stringify(data));
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 /**
@@ -110,5 +114,5 @@ export async function setUserData(data) {
  */
 export async function removeUserData() {
   await memoization.deleteCache().catch(console.error);
-  sessionStorage.removeItem(config.storageKeys.userService);
+  sessionStorage.removeItem(STORAGE_KEY);
 }

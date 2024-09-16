@@ -3,8 +3,10 @@ import { until } from 'lit/directives/until.js';
 import { getRepairs, getAllUsers } from '@db';
 import { adminDashboard as template } from '@templates';
 import { getRangeOption, getQueryParam, makeQueryParam, notice } from '@utilities';
+import config from '../../config';
 
-const DEFAULT_RANGE = 'today';
+const DEFAULT_RANGE = config.adminDashboard.defaultFiltersRange;
+const CHARTS_FILTERS_PREFIX = 'user';
 
 /**
  * @description Renders the `admin` page.
@@ -80,7 +82,11 @@ function onRangeSelect(event, type, query) {
   if (value === DEFAULT_RANGE || !range) delete query[type];
   else query[type] = value;
 
-  const queryParams = makeQueryParam(query);
+  const queryParams = makeQueryParam({
+    ...query,
+    ...Object.fromEntries(Object.entries(getQueryParam(window.location.search.slice(1)))
+      .filter(([key]) => !key.startsWith(CHARTS_FILTERS_PREFIX)))
+  });
 
   if (queryParams) page.redirect(`/admin?${queryParams}`);
   else page.redirect('/admin');

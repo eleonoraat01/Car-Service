@@ -2,8 +2,11 @@ import { html } from 'lit';
 import { Chart, registerables } from 'chart.js';
 import { renderPaginationLinks } from '@templates';
 import { currencyFormatter, RANGE_OPTIONS } from '@utilities';
+import config from '../../config';
 
 Chart.register(...registerables);
+
+const SHOWN_USERS_PER_PAGE = config.adminDashboard.shownUsersPerPage;
 
 /**
  * @typedef {object} AdminPageProps
@@ -24,7 +27,7 @@ Chart.register(...registerables);
  */
 export default (data) => {
   const { users, numberOfUsers, repairs, pageNumber, userProfit, userRepairs, onBrowseAsUser, onRangeSelect } = data;
-  const totalPages = Math.max(Math.ceil(numberOfUsers / config.usersPerPage), 1);
+  const totalPages = Math.max(Math.ceil(numberOfUsers / SHOWN_USERS_PER_PAGE), 1);
 
   return html`
     <section id="admin-page">
@@ -55,19 +58,13 @@ export default (data) => {
  */
 const renderUserProfitChart = (labels, data) => {
   const canvas = document.createElement('canvas');
+  const { profitChartConfig } = config.adminDashboard.carts;
 
-  new Chart(canvas, {
-    type: 'pie',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        label: 'Печалба',
-        ...colors,
-      }]
-    },
-    options: profitChartConfig
-  });
+  customTooltipLabel(profitChartConfig);
+  profitChartConfig.data.labels = labels;
+  profitChartConfig.data.datasets[0].data = data;
+
+  new Chart(canvas, profitChartConfig);
 
   return canvas;
 };
@@ -80,19 +77,12 @@ const renderUserProfitChart = (labels, data) => {
  */
 const renderUserRepairsChart = (labels, data) => {
   const canvas = document.createElement('canvas');
+  const { repairsChartConfig } = config.adminDashboard.carts;
 
-  new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        label: 'Ремонти',
-        ...colors,
-      }]
-    },
-    options: repairsChartConfig
-  });
+  repairsChartConfig.data.labels = labels;
+  repairsChartConfig.data.datasets[0].data = data;
+
+  new Chart(canvas, repairsChartConfig);
 
   return canvas;
 };
@@ -157,82 +147,20 @@ const renderTableRow = (user, onBrowseAsUser) => {
   `;
 };
 
-const colors = {
-  backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(201, 203, 207, 0.2)',
-  ],
-  borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(201, 203, 207, 1)',
-  ],
-  borderWidth: 1,
-};
+/**
+ * @description Customizes the tooltip label for the pie chart.
+ * @param {import('chart.js').ChartConfiguration<'pie'>} config - The chart configuration.
+ */
+function customTooltipLabel(config) {
+  if (!config.options?.plugins?.tooltip?.callbacks) return;
 
-const profitChartConfig = /**@type {import('chart.js').ChartOptions<'pie'>}*/({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Печалба на потребителите',
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => {
-          const label = context.label || '';
-          const value = context.parsed || 0;
-          const total = context.dataset.data.reduce((acc, x) => acc + x, 0);
-          const percent = ((value / total) * 100).toFixed(2);
-          const currency = currencyFormatter(value.toString());
+  config.options.plugins.tooltip.callbacks.label = (context) => {
+    const label = context.label || '';
+    const value = context.parsed || 0;
+    const total = context.dataset.data.reduce((acc, x) => acc + x, 0);
+    const percent = ((value / total) * 100).toFixed(2);
+    const currency = currencyFormatter(value.toString());
 
-          return `${label}: ${currency} (${percent}%)`;
-        }
-      }
-    }
-  }
-});
-
-const repairsChartConfig = /**@type {import('chart.js').ChartOptions<'bar'>}*/({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
-    },
-    title: {
-      display: true,
-      text: 'Брой ремонти на потребителите',
-    },
-  },
-  scales: {
-    y: {
-      ticks: {
-        stepSize: 1
-      },
-      title: {
-        display: true,
-        text: 'Брой ремонти',
-      },
-    },
-    x: {
-      title: {
-        display: true,
-        text: 'Потребители',
-      }
-    }
-  }
-});
+    return `${label}: ${currency} (${percent}%)`;
+  };
+}

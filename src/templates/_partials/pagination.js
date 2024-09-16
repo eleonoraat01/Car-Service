@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getQueryParam, makeQueryParam } from '@utilities';
 import config from '../../config';
 
-const { relativePageLinks } = config.pagination;
+const RELATIVE_PAGE_LINKS = config.pagination.relativePageLinks;
 
 /**
  * @description Render pagination links based on the current page, the total number of pages and the search query.
@@ -59,9 +59,9 @@ function getLinkUrl(desiredPage, additionalQueryParams) {
  * @returns {Array<number>} An array of page relative numbers.
  */
 function generateRelativePageLinks(currentPage, totalPages) {
-  const relativePages = Math.floor(relativePageLinks / 2);
-  const startPage = Math.min(Math.max(1, currentPage - relativePages), Math.max(1, totalPages - relativePageLinks + 1));
-  const endPage = Math.max(Math.min(totalPages, currentPage + relativePages), Math.min(totalPages, relativePageLinks));
+  const relativePages = Math.floor(RELATIVE_PAGE_LINKS / 2);
+  const startPage = Math.min(Math.max(1, currentPage - relativePages), Math.max(1, totalPages - RELATIVE_PAGE_LINKS + 1));
+  const endPage = Math.max(Math.min(totalPages, currentPage + relativePages), Math.min(totalPages, RELATIVE_PAGE_LINKS));
 
   return Array.from({ length: Math.min(endPage - startPage + 1, totalPages) }, (_, i) => startPage + i);
 }

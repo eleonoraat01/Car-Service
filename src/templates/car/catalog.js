@@ -4,6 +4,8 @@ import { getUserData } from '@db';
 import { renderPaginationLinks } from '@templates';
 import config from '../../config';
 
+const ROWS_PER_PAGE = config.catalogsTable.rowsPerPage;
+
 /**
  * @typedef {object} CarCatalogPageProps
  * @property {Array<Car>} cars - The array of cars.
@@ -22,7 +24,7 @@ import config from '../../config';
  */
 export default (data) => {
   const { cars, carsCount, pageNumber, searchCategory, searchQuery, onSearch, onDelete } = data;
-  const totalPages = Math.max(Math.ceil(carsCount / config.itemsPerPage), 1);
+  const totalPages = Math.max(Math.ceil(carsCount / ROWS_PER_PAGE), 1);
   const isSuperUser = !!getUserData()?.isSuperUser;
   const username = cars[0]?.owner?.username;
 

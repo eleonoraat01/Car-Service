@@ -1,6 +1,8 @@
 import { getUserData } from '@db';
 import config from '../config';
 
+const STORAGE_KEY = config.storageKeys.memoization;
+
 /**
  * @classdesc Memoization class for caching data using the Cache API.
  * @class
@@ -22,8 +24,8 @@ class Memoization {
 
     if (!window.caches) console.warn('Cache API is not supported in this environment');
 
-    if (!sessionStorage.getItem(config.storageKeys.memoization) && this.supported) {
-      sessionStorage.setItem(config.storageKeys.memoization, 'true');
+    if (this.supported && !sessionStorage.getItem(STORAGE_KEY)) {
+      sessionStorage.setItem(STORAGE_KEY, 'true');
       this.deleteCache();
     }
   }
@@ -34,8 +36,10 @@ class Memoization {
    * @readonly
    */
   get supported() {
-    const user = getUserData();
-    return !!window.caches && !!user && !user.isSuperUser;
+    if (!window.caches) return false;
+
+    // Super users should not use the cache
+    return !getUserData()?.isSuperUser;
   }
 
   /**

@@ -5,6 +5,8 @@ import { renderPaginationLinks } from '@templates';
 import { formatDateToLocale } from '@utilities';
 import config from '../../config';
 
+const ROWS_PER_PAGE = config.catalogsTable.rowsPerPage;
+
 /**
  * @typedef {object} RepairCatalogPageProps
  * @property {Array<Repair>} repairs - The array of repairs.
@@ -23,7 +25,7 @@ import config from '../../config';
  */
 export default (data) => {
   const { repairs, allRepairs, car, pageNumber, prev, onExport, onDelete } = data;
-  const totalPages = Math.max(Math.ceil(allRepairs.length / config.itemsPerPage), 1);
+  const totalPages = Math.max(Math.ceil(allRepairs.length / ROWS_PER_PAGE), 1);
 
   return html`
     <section id="catalog-page">
